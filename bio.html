@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio | Mapalo Musonda</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#3B82F6', secondary: '#10B981' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding-top: 64px;
+        }
+
+        .bio-content {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .bio-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md z-50 shadow-sm">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="font-['Pacifico'] text-2xl text-primary">mapalo</a>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="index.html#blog"
+                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Blog</a>
+                <a href="index.html#projects"
+                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Projects</a>
+                <a href="index.html#skills"
+                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Skills</a>
+                <a href="index.html#contact"
+                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Contact</a>
+                <a href="bio.html"
+                    class="text-primary font-semibold transition-colors duration-200">Bio</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Bio Section -->
+    <section class="py-20 bg-white min-h-screen">
+        <div class="container mx-auto px-4">
+            <div class="bio-content">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-8 text-center">Mapalo's Bio</h1>
+                <p class="text-center text-gray-500 mb-12 italic">Not as long as other autobiographies but every bit as ambitious.</p>
+
+                <div class="text-gray-700 text-lg">
+                    <p>
+                        Hey there, I'm Mapalo. I'm a software developer, problem solver, and someone who genuinely enjoys making things work better than they did before.
+                    </p>
+
+                    <p>
+                        I build full-stack applications with a focus on clean code, performance, and user experience. Right now, I'm working on cross-platform event and ticketing apps using React Native, SwiftUI, and Supabase—bringing seamless experiences to mobile and beyond.
+                    </p>
+
+                    <p>
+                        I have a thing for well-designed systems. One of my favorite books is <em>The Design of Everyday Things</em> by Donald Norman. I believe good design isn't just about aesthetics—it's about making complex things feel simple and intuitive.
+                    </p>
+
+                    <p>
+                        When I'm not coding, I'm probably exploring new tech, reading about AI and automation, or diving into algorithmic trading strategies. I built an NNFX trading robot in MQL5, which taught me a lot about discipline, risk management, and the importance of testing your assumptions.
+                    </p>
+
+                    <p>
+                        I'm also passionate about education and accessibility. I recently worked on research exploring AI-powered language translation tools to boost tourism in Zambia—because technology should help bridge gaps, not create them.
+                    </p>
+
+                    <p>
+                        My life goal? To keep building things that matter. Maybe one day I'll write a book about software craftsmanship, or create a product that helps thousands of people solve a real problem. Who knows—maybe I'll even start a tech community in Zambia that inspires the next generation of developers.
+                    </p>
+
+                    <p>
+                        One thing's for sure: I'll keep learning, keep building, and keep pushing myself to do better work. Because at the end of the day, that's what it's all about.
+                    </p>
+
+                    <p class="mt-8">
+                        If you enjoyed reading this and want to connect, feel free to reach out. I'm always up for a good conversation about tech, design, or life in general.
+                    </p>
+
+                    <p class="font-medium">
+                        Stay curious,<br>
+                        — Mapalo
+                    </p>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex justify-center space-x-4 mt-12">
+                    <a href="https://github.com/Penza2024" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors duration-200">
+                        <i class="ri-github-fill ri-xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
+                        <i class="ri-linkedin-fill ri-xl"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors duration-200">
+                        <i class="ri-twitter-fill ri-xl"></i>
+                    </a>
+                    <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition-colors duration-200">
+                        <i class="ri-code-box-fill ri-xl"></i>
+                    </a>
+                </div>
+
+                <!-- Back to Home -->
+                <div class="text-center mt-12">
+                    <a href="index.html"
+                        class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
+                        <i class="ri-arrow-left-line ri-lg mr-2"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400">&copy; 2025 Mapalo Musonda. Built with passion and code.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

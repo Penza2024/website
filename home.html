@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapalo Musonda | Digital Garden</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding-top: 64px;
+        }
+
+        .content-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .post-link {
+            transition: all 0.2s;
+        }
+
+        .post-link:hover {
+            transform: translateX(4px);
+            color: #3B82F6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md z-50 shadow-sm">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="home.html" class="font-['Pacifico'] text-2xl text-primary">mapalo</a>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="notebook.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Notebook</a>
+                <a href="projects.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Projects</a>
+                <a href="bio.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Bio</a>
+                <a href="uses.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Uses</a>
+                <a href="bookmarks.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Bookmarks</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="content-wrapper">
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-4">FROM MAPALO</h1>
+                    <p class="text-sm text-gray-500 uppercase tracking-wider mb-4">Code, Ideas & Digital Experiments</p>
+                    <p class="text-xs text-gray-400 italic">"Another developer telling us how to build better software" — someone on the internet</p>
+                </div>
+
+                <div class="prose prose-lg max-w-none mb-12">
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        <span class="text-6xl float-left mr-3 leading-none text-primary font-bold">H</span>ey there, builders. I'm <a href="bio.html" class="text-primary hover:underline">Mapalo</a>. Welcome to my digital garden. I'm glad you're here. Make yourself comfortable. By day, I'm a full-stack developer, problem solver, and occasional coffee enthusiast. By night, I'm debugging code that worked perfectly fine yesterday. Kidding. I'm just someone who loves building things that work beautifully and writing about <a href="#" class="text-primary hover:underline">technology</a>, <a href="#" class="text-primary hover:underline">design</a>, <a href="#" class="text-primary hover:underline">software craft</a>, and whatever I'm currently obsessed with.
+                    </p>
+
+                    <p class="text-gray-700 leading-relaxed">
+                        Welcome. Feel free to explore, check out my <a href="notebook.html" class="text-primary hover:underline">notebook</a>, or <a href="index.html#contact" class="text-primary hover:underline">reach out</a> directly. I'm happy you're here.
+                    </p>
+                </div>
+
+                <!-- Popular Posts -->
+                <div class="mb-16">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">POPULAR POSTS</h2>
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-primary pl-4">
+                            <a href="#" class="post-link block">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Building for Performance: Why Speed Still Matters</h3>
+                                <p class="text-gray-600">We obsess over frameworks and forget the fundamentals. Let's talk about why fast software is good software.</p>
+                            </a>
+                        </div>
+                        <div class="border-l-4 border-primary pl-4">
+                            <a href="#" class="post-link block">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">The Art of Clean Code: Beyond the Buzzwords</h3>
+                                <p class="text-gray-600">Clean code isn't about following rules blindly—it's about writing code that humans can understand.</p>
+                            </a>
+                        </div>
+                        <div class="border-l-4 border-primary pl-4">
+                            <a href="#" class="post-link block">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Why I Built My Own Trading Bot (And What I Learned)</h3>
+                                <p class="text-gray-600">Algorithmic trading taught me more about discipline and testing than any course ever could.</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest Posts -->
+                <div class="mb-16">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">LATEST POSTS</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-baseline">
+                            <span class="text-sm text-gray-500 mr-4 w-12">May</span>
+                            <a href="#" class="text-gray-700 hover:text-primary transition-colors">React Native vs SwiftUI: A Developer's Perspective</a>
+                        </div>
+                        <div class="flex items-baseline">
+                            <span class="text-sm text-gray-500 mr-4 w-12">Apr</span>
+                            <a href="#" class="text-gray-700 hover:text-primary transition-colors">Supabase: The Backend I Wish I Had Years Ago</a>
+                        </div>
+                        <div class="flex items-baseline">
+                            <span class="text-sm text-gray-500 mr-4 w-12">Mar</span>
+                            <a href="#" class="text-gray-700 hover:text-primary transition-colors">AI Translation Tools and the Future of Tourism</a>
+                        </div>
+                        <div class="flex items-baseline">
+                            <span class="text-sm text-gray-500 mr-4 w-12">Feb</span>
+                            <a href="#" class="text-gray-700 hover:text-primary transition-colors">The Joy of Side Projects</a>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-gray-600">More posts can be found in <a href="notebook.html" class="text-primary hover:underline">all posts</a>.</p>
+                </div>
+
+                <!-- More Links -->
+                <div class="mb-16">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">MORE & OTHER</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <a href="bookmarks.html" class="text-primary hover:underline font-semibold">Bookmarks</a>
+                            <p class="text-gray-600 text-sm">Things on the web I'm fond of and want to share with you.</p>
+                        </div>
+                        <div>
+                            <a href="bio.html" class="text-primary hover:underline font-semibold">Bio</a>
+                            <p class="text-gray-600 text-sm">Not as long as other autobiographies but every bit as ambitious.</p>
+                        </div>
+                        <div>
+                            <a href="uses.html" class="text-primary hover:underline font-semibold">Uses</a>
+                            <p class="text-gray-600 text-sm">The tools, apps, and gear I use to build software.</p>
+                        </div>
+                        <div>
+                            <a href="projects.html" class="text-primary hover:underline font-semibold">Projects</a>
+                            <p class="text-gray-600 text-sm">Things I've built, shipped, and learned from.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="content-wrapper text-center">
+                <p class="text-gray-400 mb-2">© 2025 Mapalo Musonda</p>
+                <p class="text-gray-500 text-sm">This site is dedicated to building better software and sharing what I learn along the way.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
