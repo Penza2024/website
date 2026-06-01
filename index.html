@@ -104,51 +104,26 @@
             gap: 2.5rem;
         }
 
-        /* ── 3D avatar ── */
+        /* ── 3D floating head ── */
         .hero-photo-wrap {
             flex-shrink: 0;
-            width: 120px;
-            height: 120px;
-            perspective: 700px;
-            cursor: pointer;
-            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
-        }
-
-        .hero-photo-inner {
-            width: 100%;
-            height: 100%;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
+            overflow: hidden;
             position: relative;
-            transform-style: preserve-3d;
-            will-change: transform;
-            filter: drop-shadow(0 0 10px rgba(100,255,218,0.4))
-                    drop-shadow(0 0 30px rgba(100,255,218,0.15));
-            transition: filter 0.3s;
-        }
-
-        .hero-photo-wrap:hover .hero-photo-inner {
-            filter: drop-shadow(0 0 18px rgba(100,255,218,0.7))
-                    drop-shadow(0 0 50px rgba(100,255,218,0.3));
-        }
-
-        .hero-photo-inner img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
+            cursor: grab;
+            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
             border: 2px solid var(--accent);
-            box-shadow: 0 0 0 5px var(--accent-dim);
+            box-shadow: 0 0 0 5px rgba(100,255,218,0.08),
+                        0 0 30px rgba(100,255,218,0.25),
+                        0 0 70px rgba(100,255,218,0.1);
         }
 
-        .hero-photo-glare {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22) 0%, transparent 65%);
+        .hero-photo-wrap canvas {
+            display: block;
+            width: 150px !important;
+            height: 150px !important;
         }
 
         .hero-text { flex: 1; min-width: 0; }
@@ -497,12 +472,7 @@
     <!-- Hero -->
     <section id="hero">
         <div class="hero-inner">
-            <div class="hero-photo-wrap">
-                <div class="hero-photo-inner">
-                    <img src="images/profilePicture.jpeg" alt="Mapalo Musonda">
-                    <div class="hero-photo-glare"></div>
-                </div>
-            </div>
+            <div id="head-wrap" class="hero-photo-wrap"></div>
             <div class="hero-text">
                 <h1 class="hero-name">Mapalo Musonda</h1>
                 <p class="hero-role"><span class="typed"></span><span class="cursor"></span></p>
@@ -737,6 +707,7 @@
 
 <div id="toast">Message sent!</div>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 <script>
 // ── Canvas particle network ────────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
@@ -855,60 +826,79 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── 3D tilt avatar ────────────────────────────────────────────────────────
+// ── Three.js 3D floating head ──────────────────────────────────────────────
 (function() {
-    const wrap  = document.querySelector('.hero-photo-wrap');
-    const inner = document.querySelector('.hero-photo-inner');
-    const glare = document.querySelector('.hero-photo-glare');
-    if (!wrap || !inner) return;
+    const SIZE = 150;
+    const wrap = document.getElementById('head-wrap');
+    if (!wrap || typeof THREE === 'undefined') return;
 
-    const MAX   = 22;   // max tilt degrees
-    let raf     = null;
-    let idleT   = 0;
-    let hovering = false;
+    // Renderer — transparent bg so the dark site shows through
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(SIZE, SIZE);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    wrap.appendChild(renderer.domElement);
 
-    // Smooth idle float when not hovered
-    function idleLoop() {
-        if (hovering) return;
-        idleT += 0.012;
-        const rx =  Math.sin(idleT * 0.7) * 5;
-        const ry =  Math.cos(idleT) * 7;
-        inner.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-        raf = requestAnimationFrame(idleLoop);
-    }
-    raf = requestAnimationFrame(idleLoop);
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+    camera.position.z = 3.3;
 
-    wrap.addEventListener('mouseenter', () => {
-        hovering = true;
-        cancelAnimationFrame(raf);
-        inner.style.transition = 'transform 0.08s linear';
-        if (glare) glare.style.opacity = '1';
-    });
+    // Sphere + photo texture
+    const geo = new THREE.SphereGeometry(1, 64, 64);
+    new THREE.TextureLoader().load('images/profilePicture.jpeg', function(tex) {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const mat = new THREE.MeshStandardMaterial({
+            map: tex,
+            roughness: 0.62,
+            metalness: 0.04,
+        });
+        const sphere = new THREE.Mesh(geo, mat);
+        scene.add(sphere);
 
-    wrap.addEventListener('mousemove', e => {
-        const r  = wrap.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2); // –1 → 1
-        const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2); // –1 → 1
-        const rx = -dy * MAX;
-        const ry =  dx * MAX;
-        inner.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.06)`;
-        if (glare) {
-            const gx = ((dx + 1) / 2 * 100).toFixed(1);
-            const gy = ((dy + 1) / 2 * 100).toFixed(1);
-            glare.style.background =
-                `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.24) 0%, transparent 65%)`;
-        }
-    });
+        // ── Lighting ──
+        // Soft ambient base
+        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
 
-    wrap.addEventListener('mouseleave', () => {
-        hovering = false;
-        if (glare) glare.style.opacity = '0';
-        inner.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
-        inner.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)';
-        setTimeout(() => {
-            inner.style.transition = '';
-            raf = requestAnimationFrame(idleLoop);
-        }, 560);
+        // Key light — top-right front (main face illumination)
+        const key = new THREE.DirectionalLight(0xffffff, 1.4);
+        key.position.set(2, 3, 4);
+        scene.add(key);
+
+        // Teal rim — back-left (matches site accent, adds depth)
+        const rim = new THREE.PointLight(0x64ffda, 4, 8);
+        rim.position.set(-2.5, 0.5, -1.5);
+        scene.add(rim);
+
+        // Soft teal fill from below
+        const fill = new THREE.PointLight(0x64ffda, 0.7, 6);
+        fill.position.set(0, -2.5, 2);
+        scene.add(fill);
+
+        // ── Mouse influence ──
+        let mx = 0, my = 0;
+        document.addEventListener('mousemove', e => {
+            mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+            my = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // ── Animation loop ──
+        let t = 0, autoRot = 0;
+        (function tick() {
+            requestAnimationFrame(tick);
+            t       += 0.008;
+            autoRot += 0.003;
+
+            // Float up and down
+            sphere.position.y = Math.sin(t) * 0.07;
+
+            // Blend auto-spin with mouse lean
+            const tY = autoRot + mx * 0.55;
+            const tX = my * -0.3;
+            sphere.rotation.y += (tY - sphere.rotation.y) * 0.04;
+            sphere.rotation.x += (tX - sphere.rotation.x) * 0.04;
+
+            renderer.render(scene, camera);
+        })();
     });
 })();
 
