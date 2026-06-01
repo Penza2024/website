@@ -7,150 +7,170 @@
     <title>Now | Mapalo Musonda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:     #faf7f2;
-            --text:   #1a1814;
-            --muted:  #6b6055;
-            --link:   #7c3a1e;
-            --hover:  #c4956a;
-            --border: #e0d5c5;
-            --accent: #c4956a;
+            --bg:      #0d1117;
+            --text:    #e6edf3;
+            --muted:   #7d8590;
+            --accent:  #64ffda;
+            --border:  rgba(48, 54, 61, 0.9);
+            --card-bg: rgba(22, 27, 34, 0.75);
         }
 
-        html { font-size: 18px; scroll-behavior: smooth; }
+        html { font-size: 16px; scroll-behavior: smooth; }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'EB Garamond', Georgia, serif;
-            line-height: 1.8;
-            padding: 2.5rem 1.25rem 4rem;
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.75;
+            padding-top: 3.5rem;
         }
 
-        .wrap { max-width: 680px; margin: 0 auto; }
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
 
         a {
-            color: var(--link);
-            text-decoration: underline;
-            text-decoration-color: var(--accent);
-            text-underline-offset: 3px;
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+        a:hover { opacity: 0.75; }
+
+        /* ── Sticky Header ── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(13, 17, 23, 0.88);
+            border-bottom: 1px solid rgba(48, 54, 61, 0.9);
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .site-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--accent);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .site-title::before { content: '> '; }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.1rem 1.25rem;
+            margin-left: auto;
+        }
+        nav a {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
             transition: color 0.15s;
         }
-        a:hover { color: var(--hover); }
+        nav a:hover { color: var(--accent); opacity: 1; }
+        nav a.active { color: var(--accent); }
 
-        header {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
-        .site-title a { color: var(--text); text-decoration: none; }
-
-        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
-        nav a {
-            color: var(--muted);
-            font-size: 0.92rem;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-        }
-        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
-        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
-
+        /* ── Page title ── */
         .page-header { margin-bottom: 0.5rem; }
-        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
         .updated {
-            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
             color: var(--muted);
-            font-style: italic;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2.75rem;
             display: block;
         }
 
+        /* ── Section labels ── */
         h2 {
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            margin: 2rem 0 0.75rem;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2.25rem 0 1rem;
+        }
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(100, 255, 218, 0.2), transparent);
         }
 
         .now-block { margin-bottom: 0.5rem; }
 
-        .now-block p { margin-bottom: 0.9rem; font-size: 1rem; }
+        .now-block p {
+            margin-bottom: 0.9rem;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
 
         .now-block ul {
             list-style: none;
             margin-bottom: 0.9rem;
         }
         .now-block ul li {
-            padding: 0.45rem 0;
+            padding: 0.55rem 0;
             border-bottom: 1px solid var(--border);
-            font-size: 0.97rem;
+            font-size: 0.92rem;
+            color: var(--text);
         }
         .now-block ul li:first-child { border-top: 1px solid var(--border); }
 
         .now-block ul li span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
             color: var(--muted);
-            font-style: italic;
-            font-size: 0.85rem;
-            margin-left: 0.5rem;
-        }
-
-        /* ── Justified prose ── */
-        .now-block p {
-            text-align: justify;
-            hyphens: auto;
-            text-align-last: left;
+            margin-left: 0.6rem;
         }
 
         /* ── External link arrows ── */
         a[target="_blank"]::after {
             content: ' ↗';
-            font-size: 0.72em;
-            vertical-align: 0.12em;
-            opacity: 0.55;
-            text-decoration: none;
-            display: inline;
+            font-size: 0.68em;
+            opacity: 0.45;
         }
         nav a::after,
-        footer a::after,
-        .back-link::after { content: none; }
+        footer a::after { content: none; }
 
-        @keyframes ornament-pulse {
-            0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
-            50%       { opacity: 1;   letter-spacing: 0.9em; }
-        }
-        .ornament {
-            text-align: center;
-            color: var(--accent);
-            font-size: 1rem;
-            letter-spacing: 0.6em;
-            margin: 2.5rem 0;
-            user-select: none;
-            animation: ornament-pulse 5s ease-in-out infinite;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 2.5rem;
-            font-size: 0.92rem;
-            font-style: italic;
-        }
-
+        /* ── Footer ── */
         footer {
             border-top: 1px solid var(--border);
             padding-top: 1.5rem;
             margin-top: 3rem;
-            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
             color: var(--muted);
             display: flex;
             justify-content: space-between;
@@ -158,31 +178,39 @@
             gap: 0.5rem;
         }
         footer a { color: var(--muted); text-decoration: none; }
-        footer a:hover { color: var(--link); }
+        footer a:hover { color: var(--accent); opacity: 1; }
+
+        @media (max-width: 540px) {
+            .nav-inner { gap: 1rem; }
+            nav { gap: 0.1rem 0.75rem; }
+        }
     </style>
 </head>
 
 <body>
-<div class="wrap">
 
     <header>
-        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
-        <nav>
-            <a href="index.html#writing">Writing</a>
-            <a href="index.html#projects">Projects</a>
-            <a href="index.html#certificates">Certificates</a>
-            <a href="index.html#contact">Contact</a>
-            <a href="bio.html">Bio</a>
-            <a href="notebook.html">Notebook</a>
-            <a href="now.html" class="active">Now</a>
-            <a href="uses.html">Uses</a>
-        </nav>
+        <div class="nav-inner">
+            <span class="site-title">mapalo.dev</span>
+            <nav>
+                <a href="index.html#writing">Writing</a>
+                <a href="index.html#projects">Projects</a>
+                <a href="index.html#skills">Skills</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="bio.html">Bio</a>
+                <a href="notebook.html">Notebook</a>
+                <a href="now.html" class="active">Now</a>
+                <a href="uses.html">Uses</a>
+            </nav>
+        </div>
     </header>
+
+<div class="wrap">
 
     <div class="page-header">
         <h1>Now</h1>
-        <span class="updated">Last updated June 2026 · Lusaka, Zambia</span>
     </div>
+    <span class="updated">Last updated June 2026 · Lusaka, Zambia</span>
 
     <div class="now-block">
         <h2>Building</h2>
@@ -193,8 +221,6 @@
         </ul>
     </div>
 
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-
     <div class="now-block">
         <h2>Reading</h2>
         <ul>
@@ -203,8 +229,6 @@
             <li>LoRaWAN specification docs and ChirpStack v4 migration guides <span>reference</span></li>
         </ul>
     </div>
-
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <div class="now-block">
         <h2>Thinking about</h2>
@@ -216,8 +240,6 @@
         more confidence in the edge before I scale the position size.</p>
     </div>
 
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-
     <div class="now-block">
         <h2>Listening to</h2>
         <ul>
@@ -226,8 +248,6 @@
             <li>The Changelog — open source, developer culture</li>
         </ul>
     </div>
-
-    <a class="back-link" href="index.html">&larr; Back to home</a>
 
     <footer>
         <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
