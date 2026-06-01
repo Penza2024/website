@@ -135,6 +135,27 @@
         .cert-name { font-weight: 500; margin-bottom: 0.15rem; }
         .cert-meta { font-size: 0.82rem; color: var(--muted); font-style: italic; }
 
+        /* ── Justified prose ── */
+        .bio-prose p {
+            text-align: justify;
+            hyphens: auto;
+            text-align-last: left;
+        }
+
+        /* ── External link arrows ── */
+        a[target="_blank"]::after {
+            content: ' ↗';
+            font-size: 0.72em;
+            vertical-align: 0.12em;
+            opacity: 0.55;
+            text-decoration: none;
+            display: inline;
+        }
+        nav a::after,
+        .social-row a::after,
+        footer a::after,
+        .back-link::after { content: none; }
+
         /* ── Social links ── */
         .social-row {
             margin-top: 1.5rem;

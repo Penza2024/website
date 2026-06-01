@@ -120,6 +120,26 @@
 
         .article-tags span::before { content: '#'; }
 
+        /* ── Justified prose ── */
+        .article-excerpt {
+            text-align: justify;
+            hyphens: auto;
+            text-align-last: left;
+        }
+
+        /* ── External link arrows ── */
+        a[target="_blank"]::after {
+            content: ' ↗';
+            font-size: 0.72em;
+            vertical-align: 0.12em;
+            opacity: 0.55;
+            text-decoration: none;
+            display: inline;
+        }
+        nav a::after,
+        footer a::after,
+        .back-link::after { content: none; }
+
         /* ── Back link ── */
         .back-link {
             display: inline-block;

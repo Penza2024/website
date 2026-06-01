@@ -105,6 +105,26 @@
             margin-left: 0.5rem;
         }
 
+        /* ── Justified prose ── */
+        .now-block p {
+            text-align: justify;
+            hyphens: auto;
+            text-align-last: left;
+        }
+
+        /* ── External link arrows ── */
+        a[target="_blank"]::after {
+            content: ' ↗';
+            font-size: 0.72em;
+            vertical-align: 0.12em;
+            opacity: 0.55;
+            text-decoration: none;
+            display: inline;
+        }
+        nav a::after,
+        footer a::after,
+        .back-link::after { content: none; }
+
         @keyframes ornament-pulse {
             0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
             50%       { opacity: 1;   letter-spacing: 0.9em; }

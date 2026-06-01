@@ -348,6 +348,41 @@
         }
         button[type="submit"]:hover { background: var(--link); }
 
+        /* ── Justified prose ── */
+        .intro p {
+            text-align: justify;
+            hyphens: auto;
+            text-align-last: left;
+        }
+
+        /* ── External link arrows ── */
+        a[target="_blank"]::after {
+            content: ' ↗';
+            font-size: 0.72em;
+            vertical-align: 0.12em;
+            opacity: 0.55;
+            text-decoration: none;
+            display: inline;
+        }
+        .gh-strip a::after { content: none; }
+
+        /* ── Redacted projects ── */
+        .project-redacted .project-name { color: var(--muted); }
+        .redacted-bar {
+            display: inline-block;
+            background: var(--muted);
+            border-radius: 2px;
+            height: 0.9em;
+            vertical-align: middle;
+            opacity: 0.35;
+        }
+        .redacted-note {
+            font-weight: 400;
+            font-style: italic;
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+
         /* ── Footer ── */
         footer {
             border-top: 1px solid var(--border);
@@ -530,6 +565,26 @@
                 <div class="project-links">
                     <a href="https://github.com/Penza2024" target="_blank">GitHub</a>
                 </div>
+            </li>
+        </ul>
+
+        <h2 style="margin-top:2.5rem;">Client Work</h2>
+        <ul class="item-list">
+            <li class="project-redacted">
+                <div class="project-name">
+                    <span class="redacted-bar" style="width:7rem;"></span>
+                    <span class="redacted-note"> — NDA</span>
+                </div>
+                <div class="project-tags"><span class="redacted-bar" style="width:3rem;"></span> · <span class="redacted-bar" style="width:4rem;"></span> · <span class="redacted-bar" style="width:3.5rem;"></span></div>
+                <div class="project-desc">Full-stack enterprise client management platform for a Zambian software firm. Scope, architecture, and client details are confidential — ask me directly.</div>
+            </li>
+            <li class="project-redacted">
+                <div class="project-name">
+                    <span class="redacted-bar" style="width:9rem;"></span>
+                    <span class="redacted-note"> — NDA</span>
+                </div>
+                <div class="project-tags"><span class="redacted-bar" style="width:4rem;"></span> · <span class="redacted-bar" style="width:3rem;"></span> · <span class="redacted-bar" style="width:5rem;"></span></div>
+                <div class="project-desc">Freight forwarding and logistics web application — full stack with containerised deployment and CI/CD. Details redacted per client agreement.</div>
             </li>
         </ul>
 
