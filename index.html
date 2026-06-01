@@ -104,36 +104,51 @@
             gap: 2.5rem;
         }
 
-        /* ── Pixel 3D avatar ── */
-        @keyframes float-3d {
-            0%   { transform: perspective(500px) rotateY(-7deg) rotateX(4deg); }
-            25%  { transform: perspective(500px) rotateY(2deg)  rotateX(-3deg); }
-            50%  { transform: perspective(500px) rotateY(7deg)  rotateX(-4deg); }
-            75%  { transform: perspective(500px) rotateY(-2deg) rotateX(3deg); }
-            100% { transform: perspective(500px) rotateY(-7deg) rotateX(4deg); }
-        }
-
+        /* ── 3D avatar ── */
         .hero-photo-wrap {
             flex-shrink: 0;
-            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both,
-                       float-3d 9s ease-in-out 1.2s infinite;
-            filter: drop-shadow(0 0 10px rgba(100,255,218,0.45))
-                    drop-shadow(0 0 35px rgba(100,255,218,0.18));
+            width: 120px;
+            height: 120px;
+            perspective: 700px;
+            cursor: pointer;
+            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+        }
+
+        .hero-photo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
             transform-style: preserve-3d;
-            cursor: crosshair;
+            will-change: transform;
+            filter: drop-shadow(0 0 10px rgba(100,255,218,0.4))
+                    drop-shadow(0 0 30px rgba(100,255,218,0.15));
             transition: filter 0.3s;
         }
-        .hero-photo-wrap:hover {
-            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+
+        .hero-photo-wrap:hover .hero-photo-inner {
             filter: drop-shadow(0 0 18px rgba(100,255,218,0.7))
                     drop-shadow(0 0 50px rgba(100,255,218,0.3));
         }
-        #hero-canvas {
-            display: block;
-            width: 108px;
-            height: 108px;
+
+        .hero-photo-inner img {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            image-rendering: pixelated;
+            object-fit: cover;
+            display: block;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 0 5px var(--accent-dim);
+        }
+
+        .hero-photo-glare {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22) 0%, transparent 65%);
         }
 
         .hero-text { flex: 1; min-width: 0; }
@@ -483,7 +498,10 @@
     <section id="hero">
         <div class="hero-inner">
             <div class="hero-photo-wrap">
-                <canvas id="hero-canvas" width="108" height="108" aria-label="Mapalo Musonda"></canvas>
+                <div class="hero-photo-inner">
+                    <img src="images/profilePicture.jpeg" alt="Mapalo Musonda">
+                    <div class="hero-photo-glare"></div>
+                </div>
             </div>
             <div class="hero-text">
                 <h1 class="hero-name">Mapalo Musonda</h1>
@@ -837,56 +855,61 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── Pixel avatar ──────────────────────────────────────────────────────────
+// ── 3D tilt avatar ────────────────────────────────────────────────────────
 (function() {
-    const hc = document.getElementById('hero-canvas');
-    if (!hc) return;
-    const ctx  = hc.getContext('2d');
-    const SIZE = 108, GRID = 18;
+    const wrap  = document.querySelector('.hero-photo-wrap');
+    const inner = document.querySelector('.hero-photo-inner');
+    const glare = document.querySelector('.hero-photo-glare');
+    if (!wrap || !inner) return;
 
-    const img = new Image();
-    img.onload = function() {
-        // ① Downsample to 18×18 on a tiny canvas
-        const tmp = document.createElement('canvas');
-        tmp.width = tmp.height = GRID;
-        const tc = tmp.getContext('2d');
-        tc.imageSmoothingEnabled = false;
-        tc.drawImage(img, 0, 0, GRID, GRID);
+    const MAX   = 22;   // max tilt degrees
+    let raf     = null;
+    let idleT   = 0;
+    let hovering = false;
 
-        // ② Clip output to circle
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
-        ctx.clip();
+    // Smooth idle float when not hovered
+    function idleLoop() {
+        if (hovering) return;
+        idleT += 0.012;
+        const rx =  Math.sin(idleT * 0.7) * 5;
+        const ry =  Math.cos(idleT) * 7;
+        inner.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        raf = requestAnimationFrame(idleLoop);
+    }
+    raf = requestAnimationFrame(idleLoop);
 
-        // ③ Scale back up with smoothing OFF → visible pixel blocks
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(tmp, 0, 0, GRID, GRID, 0, 0, SIZE, SIZE);
-        ctx.restore();
+    wrap.addEventListener('mouseenter', () => {
+        hovering = true;
+        cancelAnimationFrame(raf);
+        inner.style.transition = 'transform 0.08s linear';
+        if (glare) glare.style.opacity = '1';
+    });
 
-        // ④ Teal accent ring
-        ctx.beginPath();
-        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
-        ctx.strokeStyle = '#64ffda';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    };
-    img.onerror = function() {
-        // Fallback: initials
-        ctx.fillStyle = '#0d1117';
-        ctx.fillRect(0, 0, SIZE, SIZE);
-        ctx.fillStyle = '#64ffda';
-        ctx.font = 'bold 34px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('MM', SIZE / 2, SIZE / 2);
-        ctx.beginPath();
-        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
-        ctx.strokeStyle = '#64ffda';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    };
-    img.src = 'images/profilePicture.jpeg';
+    wrap.addEventListener('mousemove', e => {
+        const r  = wrap.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2); // –1 → 1
+        const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2); // –1 → 1
+        const rx = -dy * MAX;
+        const ry =  dx * MAX;
+        inner.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.06)`;
+        if (glare) {
+            const gx = ((dx + 1) / 2 * 100).toFixed(1);
+            const gy = ((dy + 1) / 2 * 100).toFixed(1);
+            glare.style.background =
+                `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.24) 0%, transparent 65%)`;
+        }
+    });
+
+    wrap.addEventListener('mouseleave', () => {
+        hovering = false;
+        if (glare) glare.style.opacity = '0';
+        inner.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
+        inner.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)';
+        setTimeout(() => {
+            inner.style.transition = '';
+            raf = requestAnimationFrame(idleLoop);
+        }, 560);
+    });
 })();
 
 // ── Contact form ───────────────────────────────────────────────────────────
