@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now | Mapalo Musonda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:     #faf7f2;
+            --text:   #1a1814;
+            --muted:  #6b6055;
+            --link:   #7c3a1e;
+            --hover:  #c4956a;
+            --border: #e0d5c5;
+            --accent: #c4956a;
+        }
+
+        html { font-size: 18px; scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'EB Garamond', Georgia, serif;
+            line-height: 1.8;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+
+        .wrap { max-width: 680px; margin: 0 auto; }
+
+        a {
+            color: var(--link);
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+        }
+        a:hover { color: var(--hover); }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+        .site-title a { color: var(--text); text-decoration: none; }
+
+        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
+        nav a {
+            color: var(--muted);
+            font-size: 0.92rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
+        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
+
+        .page-header { margin-bottom: 0.5rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .updated {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 2.5rem;
+            display: block;
+        }
+
+        h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .now-block { margin-bottom: 0.5rem; }
+
+        .now-block p { margin-bottom: 0.9rem; font-size: 1rem; }
+
+        .now-block ul {
+            list-style: none;
+            margin-bottom: 0.9rem;
+        }
+        .now-block ul li {
+            padding: 0.45rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.97rem;
+        }
+        .now-block ul li:first-child { border-top: 1px solid var(--border); }
+
+        .now-block ul li span {
+            color: var(--muted);
+            font-style: italic;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes ornament-pulse {
+            0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
+            50%       { opacity: 1;   letter-spacing: 0.9em; }
+        }
+        .ornament {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 0.6em;
+            margin: 2.5rem 0;
+            user-select: none;
+            animation: ornament-pulse 5s ease-in-out infinite;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2.5rem;
+            font-size: 0.92rem;
+            font-style: italic;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--link); }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+
+    <header>
+        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
+        <nav>
+            <a href="index.html#writing">Writing</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#certificates">Certificates</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="bio.html">Bio</a>
+            <a href="notebook.html">Notebook</a>
+            <a href="now.html" class="active">Now</a>
+            <a href="uses.html">Uses</a>
+        </nav>
+    </header>
+
+    <div class="page-header">
+        <h1>Now</h1>
+        <span class="updated">Last updated June 2026 · Lusaka, Zambia</span>
+    </div>
+
+    <div class="now-block">
+        <h2>Building</h2>
+        <ul>
+            <li>Iterating on <strong>Reservit</strong> — adding multi-venue support and refining the Airtel Money disbursement flow <span>active</span></li>
+            <li>Writing up the <strong>Smart Grid System</strong> technical report and preparing a conference submission <span>wrapping up</span></li>
+            <li>Exploring a small <strong>predictive maintenance dashboard</strong> that surfaces ESP32 sensor data to a web frontend in real time <span>exploring</span></li>
+        </ul>
+    </div>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <div class="now-block">
+        <h2>Reading</h2>
+        <ul>
+            <li><em>The Design of Everyday Things</em> — Donald Norman <span>in progress</span></li>
+            <li><em>A Philosophy of Software Design</em> — John Ousterhout <span>queued</span></li>
+            <li>LoRaWAN specification docs and ChirpStack v4 migration guides <span>reference</span></li>
+        </ul>
+    </div>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <div class="now-block">
+        <h2>Thinking about</h2>
+        <p>How LoRaWAN coverage could expand across Zambia's Copperbelt region — the Smart
+        Grid project proved the stack works end-to-end in Lusaka, and I keep wondering what
+        it would take to deploy something similar at scale.</p>
+        <p>Also: whether algorithmic trading strategies built on MACD divergence can be
+        backtested more rigorously before live deployment. My NNFX robot runs, but I want
+        more confidence in the edge before I scale the position size.</p>
+    </div>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <div class="now-block">
+        <h2>Listening to</h2>
+        <ul>
+            <li>Afrobeats playlists while shipping features</li>
+            <li>Lex Fridman podcast — engineering and long-form technical interviews</li>
+            <li>The Changelog — open source, developer culture</li>
+        </ul>
+    </div>
+
+    <a class="back-link" href="index.html">&larr; Back to home</a>
+
+    <footer>
+        <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
+        <span>
+            <a href="https://github.com/Penza2024" target="_blank">GitHub</a> ·
+            <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a> ·
+            <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
+        </span>
+    </footer>
+
+</div>
+</body>
+</html>

@@ -125,6 +125,10 @@
         .clearfix::after { content: ''; display: table; clear: both; }
 
         /* ── Ornamental divider ── */
+        @keyframes ornament-pulse {
+            0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
+            50%       { opacity: 1;   letter-spacing: 0.9em; }
+        }
         .ornament {
             text-align: center;
             color: var(--accent);
@@ -132,6 +136,7 @@
             letter-spacing: 0.6em;
             margin: 2.75rem 0;
             user-select: none;
+            animation: ornament-pulse 5s ease-in-out infinite;
         }
 
         /* ── Section headings ── */
@@ -172,6 +177,17 @@
             color: var(--muted);
         }
 
+        /* ── Scroll reveal ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* ── Projects ── */
         .project-name {
             font-weight: 600;
@@ -197,10 +213,58 @@
             margin-bottom: 0.85rem;
             filter: sepia(18%) contrast(0.92) brightness(0.96);
             border: 1px solid var(--border);
+            transition: filter 0.5s ease, transform 0.5s ease, border-color 0.5s ease;
+        }
+        .item-list li:hover .project-img {
+            filter: sepia(0%) contrast(1) brightness(1);
+            transform: scale(1.015);
+            border-color: var(--accent);
         }
 
         .project-links { display: flex; gap: 1.25rem; }
         .project-links a { font-size: 0.88rem; font-style: italic; }
+
+        /* ── Copy email ── */
+        .copy-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .copy-tip {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.72rem;
+            padding: 0.18rem 0.55rem;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .copy-tip.show { opacity: 1; }
+
+        /* ── GitHub strip ── */
+        .gh-strip {
+            margin: 2.5rem 0 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .gh-strip img {
+            max-width: 100%;
+            filter: sepia(30%) contrast(0.85) brightness(1.05);
+            opacity: 0.8;
+        }
+        .gh-strip p {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
 
         /* ── Certificates ── */
         .cert-name { font-weight: 500; margin-bottom: 0.15rem; }
@@ -301,6 +365,8 @@
             <a href="#contact">Contact</a>
             <a href="bio.html">Bio</a>
             <a href="notebook.html">Notebook</a>
+            <a href="now.html">Now</a>
+            <a href="uses.html">Uses</a>
         </nav>
     </header>
 
@@ -322,14 +388,17 @@
             <a href="https://github.com/Penza2024" target="_blank">GitHub</a>
             <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a>
             <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
-            <a href="mailto:mapalomusondapenza@gmail.com">Email</a>
+            <span class="copy-wrap">
+                <a href="mailto:mapalomusondapenza@gmail.com" class="copy-email" data-email="mapalomusondapenza@gmail.com">Email</a>
+                <span class="copy-tip">Copied!</span>
+            </span>
         </div>
     </section>
 
     <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <!-- Writing -->
-    <section id="writing">
+    <section id="writing" class="reveal">
         <h2>Writing &amp; Publications</h2>
         <ul class="item-list">
             <li>
@@ -346,7 +415,7 @@
     <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <!-- Projects -->
-    <section id="projects">
+    <section id="projects" class="reveal">
         <h2>Projects</h2>
         <ul class="item-list">
             <li>
@@ -460,7 +529,7 @@
     <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <!-- Certificates -->
-    <section id="certificates">
+    <section id="certificates" class="reveal">
         <h2>Certificates</h2>
         <ul class="item-list">
             <li>
@@ -487,7 +556,7 @@
     <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <!-- Contact -->
-    <section id="contact">
+    <section id="contact" class="reveal">
         <h2>Get In Touch</h2>
         <p class="contact-note">Have a question or want to work together? Reach out below or write
         directly to <a href="mailto:mapalomusondapenza@gmail.com">mapalomusondapenza@gmail.com</a>.</p>
@@ -508,6 +577,14 @@
         </form>
     </section>
 
+    <!-- GitHub activity -->
+    <div class="gh-strip reveal">
+        <a href="https://github.com/Penza2024" target="_blank">
+            <img src="https://ghchart.rshah.org/c4956a/Penza2024" alt="Mapalo's GitHub contribution chart">
+        </a>
+        <p>GitHub contributions — <a href="https://github.com/Penza2024" target="_blank">Penza2024</a></p>
+    </div>
+
     <!-- Footer -->
     <footer>
         <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
@@ -523,12 +600,38 @@
 <div id="toast">Message sent — thank you!</div>
 
 <script>
+    // Contact form
     document.getElementById('contact-form').addEventListener('submit', function (e) {
         e.preventDefault();
         const toast = document.getElementById('toast');
         toast.style.display = 'block';
         this.reset();
         setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    });
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.07 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Copy email to clipboard
+    document.querySelectorAll('.copy-email').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            navigator.clipboard.writeText(this.dataset.email).then(() => {
+                const tip = this.parentElement.querySelector('.copy-tip');
+                if (tip) {
+                    tip.classList.add('show');
+                    setTimeout(() => tip.classList.remove('show'), 1800);
+                }
+            });
+        });
     });
 </script>
 </body>

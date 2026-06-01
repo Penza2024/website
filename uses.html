@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uses | Mapalo Musonda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:     #faf7f2;
+            --text:   #1a1814;
+            --muted:  #6b6055;
+            --link:   #7c3a1e;
+            --hover:  #c4956a;
+            --border: #e0d5c5;
+            --accent: #c4956a;
+        }
+
+        html { font-size: 18px; scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'EB Garamond', Georgia, serif;
+            line-height: 1.8;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+
+        .wrap { max-width: 680px; margin: 0 auto; }
+
+        a {
+            color: var(--link);
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+        }
+        a:hover { color: var(--hover); }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+        .site-title a { color: var(--text); text-decoration: none; }
+
+        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
+        nav a {
+            color: var(--muted);
+            font-size: 0.92rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
+        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
+
+        .page-header { margin-bottom: 2.5rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .page-header p { font-size: 0.97rem; color: var(--muted); font-style: italic; }
+
+        h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        section { margin-bottom: 2.75rem; }
+
+        .uses-list { list-style: none; }
+        .uses-list li {
+            border-bottom: 1px solid var(--border);
+            padding: 0.85rem 0;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.25rem 1.5rem;
+            align-items: start;
+        }
+        .uses-list li:first-child { border-top: 1px solid var(--border); }
+
+        .uses-name { font-weight: 500; font-size: 1rem; }
+        .uses-desc {
+            font-size: 0.9rem;
+            color: var(--muted);
+            grid-column: 1;
+        }
+        .uses-tag {
+            font-size: 0.72rem;
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.1rem 0.45rem;
+            white-space: nowrap;
+            align-self: center;
+            grid-row: 1 / 3;
+            grid-column: 2;
+        }
+
+        @keyframes ornament-pulse {
+            0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
+            50%       { opacity: 1;   letter-spacing: 0.9em; }
+        }
+        .ornament {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 0.6em;
+            margin: 2.5rem 0;
+            user-select: none;
+            animation: ornament-pulse 5s ease-in-out infinite;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            font-size: 0.92rem;
+            font-style: italic;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--link); }
+
+        @media (max-width: 520px) {
+            .uses-list li { grid-template-columns: 1fr; }
+            .uses-tag { grid-row: auto; grid-column: auto; width: fit-content; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+
+    <header>
+        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
+        <nav>
+            <a href="index.html#writing">Writing</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#certificates">Certificates</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="bio.html">Bio</a>
+            <a href="notebook.html">Notebook</a>
+            <a href="now.html">Now</a>
+            <a href="uses.html" class="active">Uses</a>
+        </nav>
+    </header>
+
+    <div class="page-header">
+        <h1>Uses</h1>
+        <p>Hardware, software, and tools I reach for every day.</p>
+    </div>
+
+    <!-- Hardware -->
+    <section>
+        <h2>Hardware</h2>
+        <ul class="uses-list">
+            <li>
+                <div class="uses-name">MacBook Pro</div>
+                <div class="uses-desc">Primary machine for everything — iOS dev via Xcode, React Native builds, and running Docker stacks locally.</div>
+                <span class="uses-tag">daily driver</span>
+            </li>
+            <li>
+                <div class="uses-name">ESP32-WROOM-32 (38-pin)</div>
+                <div class="uses-desc">The microcontroller of choice for IoT projects. Used in the Smart Grid System and Predictive Maintenance Node. Runs C++ firmware over the Arduino framework.</div>
+                <span class="uses-tag">hardware</span>
+            </li>
+            <li>
+                <div class="uses-name">EBYTE E220 LoRa Module</div>
+                <div class="uses-desc">868/915 MHz LoRa transceiver used for long-range, low-power sensor communication. The reason the E220 Configurator GUI exists.</div>
+                <span class="uses-tag">hardware</span>
+            </li>
+            <li>
+                <div class="uses-name">DHT11 / SW-420 / KY-038</div>
+                <div class="uses-desc">Temperature & humidity, vibration, and sound sensors wired to the ESP32 Predictive Maintenance Node. All run on 3.3V.</div>
+                <span class="uses-tag">sensors</span>
+            </li>
+        </ul>
+    </section>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <!-- Editor & Terminal -->
+    <section>
+        <h2>Editor &amp; Terminal</h2>
+        <ul class="uses-list">
+            <li>
+                <div class="uses-name">VS Code</div>
+                <div class="uses-desc">Primary editor for TypeScript, React Native, Python, and C++. Extensions: ESLint, Prettier, Tailwind CSS IntelliSense, Arduino.</div>
+                <span class="uses-tag">editor</span>
+            </li>
+            <li>
+                <div class="uses-name">Xcode</div>
+                <div class="uses-desc">Required for SwiftUI development and signing iOS builds. Also the simulator for React Native iOS testing.</div>
+                <span class="uses-tag">editor</span>
+            </li>
+            <li>
+                <div class="uses-name">zsh + oh-my-zsh</div>
+                <div class="uses-desc">Shell of choice. Plugins: git, z (jump directories), syntax-highlighting.</div>
+                <span class="uses-tag">terminal</span>
+            </li>
+        </ul>
+    </section>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <!-- Software & Apps -->
+    <section>
+        <h2>Software &amp; Apps</h2>
+        <ul class="uses-list">
+            <li>
+                <div class="uses-name">Docker Desktop</div>
+                <div class="uses-desc">Running ChirpStack, MySQL, and multi-service stacks locally. Also the local Kubernetes cluster for Incredibulls testing.</div>
+                <span class="uses-tag">devops</span>
+            </li>
+            <li>
+                <div class="uses-name">Postman</div>
+                <div class="uses-desc">API testing and collection management across Supabase edge functions, Node.js APIs, and ChirpStack webhooks.</div>
+                <span class="uses-tag">dev tool</span>
+            </li>
+            <li>
+                <div class="uses-name">MetaTrader 5</div>
+                <div class="uses-desc">Platform for running and backtesting the NNFX Trading Robot. MQL5 is its scripting language.</div>
+                <span class="uses-tag">trading</span>
+            </li>
+            <li>
+                <div class="uses-name">Expo Go</div>
+                <div class="uses-desc">For live-reloading React Native apps on a physical device during development of Reservit and BusTicKTeT.</div>
+                <span class="uses-tag">mobile</span>
+            </li>
+            <li>
+                <div class="uses-name">TablePlus</div>
+                <div class="uses-desc">GUI for browsing Supabase/PostgreSQL and MySQL databases. Cleaner than psql for exploratory queries.</div>
+                <span class="uses-tag">database</span>
+            </li>
+        </ul>
+    </section>
+
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <!-- Stack defaults -->
+    <section>
+        <h2>Stack defaults</h2>
+        <ul class="uses-list">
+            <li>
+                <div class="uses-name">TypeScript</div>
+                <div class="uses-desc">Default language for any new web or mobile project. The type safety catches enough real bugs to be worth the overhead every time.</div>
+                <span class="uses-tag">language</span>
+            </li>
+            <li>
+                <div class="uses-name">Supabase</div>
+                <div class="uses-desc">Backend of choice for mobile apps — PostgreSQL, auth, edge functions, and realtime out of the box. Replaced Firebase for most new projects.</div>
+                <span class="uses-tag">backend</span>
+            </li>
+            <li>
+                <div class="uses-name">Expo (managed workflow)</div>
+                <div class="uses-desc">React Native without the native configuration pain. EAS Build handles CI/CD for mobile.</div>
+                <span class="uses-tag">mobile</span>
+            </li>
+            <li>
+                <div class="uses-name">Vite</div>
+                <div class="uses-desc">Default bundler for React web projects. The dev server speed is hard to go back from.</div>
+                <span class="uses-tag">web</span>
+            </li>
+        </ul>
+    </section>
+
+    <a class="back-link" href="index.html">&larr; Back to home</a>
+
+    <footer>
+        <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
+        <span>
+            <a href="https://github.com/Penza2024" target="_blank">GitHub</a> ·
+            <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a> ·
+            <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
+        </span>
+    </footer>
+
+</div>
+</body>
+</html>
