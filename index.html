@@ -202,15 +202,6 @@
         .project-links { display: flex; gap: 1.25rem; }
         .project-links a { font-size: 0.88rem; font-style: italic; }
 
-        /* ── Skills ── */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: max-content 1fr;
-            gap: 0.55rem 1.5rem;
-            font-size: 0.97rem;
-        }
-        .skill-label { color: var(--muted); font-style: italic; white-space: nowrap; }
-
         /* ── Certificates ── */
         .cert-name { font-weight: 500; margin-bottom: 0.15rem; }
         .cert-meta { font-size: 0.82rem; color: var(--muted); font-style: italic; }
@@ -293,11 +284,6 @@
                 display: block;
                 margin: 0 auto 1.5rem;
             }
-            .skills-grid {
-                grid-template-columns: 1fr;
-                gap: 0.15rem;
-            }
-            .skill-label { margin-top: 0.6rem; }
         }
     </style>
 </head>
@@ -311,7 +297,6 @@
         <nav>
             <a href="#writing">Writing</a>
             <a href="#projects">Projects</a>
-            <a href="#skills">Skills</a>
             <a href="#certificates">Certificates</a>
             <a href="#contact">Contact</a>
             <a href="bio.html">Bio</a>
@@ -323,20 +308,15 @@
     <section class="intro clearfix">
         <img class="profile-img" src="images/profilePicture.jpeg" alt="Mapalo Musonda">
 
-        <p>I'm a full-stack developer and ICT graduate based in Lusaka, Zambia — building
-        software across the stack, from React Native mobile apps to ESP32 firmware and
-        LoRaWAN sensor networks. I care about code that works reliably, reads clearly,
-        and solves real problems for real people.</p>
+        <p>Hi, I'm Mapalo — a developer from Lusaka, Zambia. I build things across
+        the stack: mobile apps, web platforms, IoT sensor networks, and the occasional
+        trading robot. I like problems that are genuinely hard to solve and solutions
+        that feel obvious in hindsight.</p>
 
-        <p>My final year project was a smart grid monitoring system for ZESCO, Zambia's
-        national electricity utility — collecting sensor data over LoRaWAN, storing it in
-        Supabase, and surfacing it across two React dashboards. Alongside that I've shipped
-        three ticketing platforms (Reservit, BusTicKTeT, Ticket Sphere), each pushing my
-        understanding of mobile auth, payment APIs, and multi-tenant data design further.</p>
-
-        <p>I also write. My research on
+        <p>When I'm not writing code I'm writing about it. My research on
         <a href="images/blog.pdf" target="_blank">AI-powered language translation for tourism</a>
-        was accepted by ZICTA in 2025.</p>
+        was accepted by ZICTA in 2025. You can read more about how I work and what
+        I've built on the <a href="bio.html">bio page</a>.</p>
 
         <div class="social-row">
             <a href="https://github.com/Penza2024" target="_blank">GitHub</a>
@@ -475,29 +455,6 @@
                 </div>
             </li>
         </ul>
-    </section>
-
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-    <!-- Skills -->
-    <section id="skills">
-        <h2>Skills &amp; Technologies</h2>
-        <div class="skills-grid">
-            <span class="skill-label">Languages</span>
-            <span>TypeScript, JavaScript, Python, Java, C++, MQL5, PHP</span>
-            <span class="skill-label">Mobile</span>
-            <span>React Native, Expo, SwiftUI</span>
-            <span class="skill-label">Web</span>
-            <span>React, Vite, Node.js, Express</span>
-            <span class="skill-label">Data</span>
-            <span>Supabase, PostgreSQL, Firebase, MySQL</span>
-            <span class="skill-label">IoT</span>
-            <span>ESP32, LoRaWAN, ChirpStack, MQTT, Serial</span>
-            <span class="skill-label">DevOps</span>
-            <span>Docker, Kubernetes, GitHub Actions, CI/CD</span>
-            <span class="skill-label">Tools</span>
-            <span>Git, Xcode, Postman, Tkinter</span>
-        </div>
     </section>
 
     <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>

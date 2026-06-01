@@ -5,136 +5,311 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio | Mapalo Musonda</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config = { theme: { extend: { colors: { primary: '#3B82F6', secondary: '#10B981' } } } }</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg:      #faf7f2;
+            --text:    #1a1814;
+            --muted:   #6b6055;
+            --link:    #7c3a1e;
+            --hover:   #c4956a;
+            --border:  #e0d5c5;
+            --accent:  #c4956a;
+        }
+
+        html { font-size: 18px; scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', sans-serif;
-            padding-top: 64px;
-        }
-
-        .bio-content {
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .bio-content p {
-            margin-bottom: 1.5rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'EB Garamond', Georgia, serif;
             line-height: 1.8;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+
+        .wrap { max-width: 680px; margin: 0 auto; }
+
+        a {
+            color: var(--link);
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+        }
+        a:hover { color: var(--hover); }
+
+        /* ── Header / Nav ── */
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+        .site-title a { color: var(--text); text-decoration: none; }
+
+        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
+        nav a {
+            color: var(--muted);
+            font-size: 0.92rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
+        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
+
+        /* ── Page title ── */
+        .page-header { margin-bottom: 2.5rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .page-header p { font-size: 0.97rem; color: var(--muted); font-style: italic; }
+
+        /* ── Bio prose ── */
+        .bio-prose p {
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+        }
+
+        .bio-prose p:first-of-type::first-letter {
+            float: left;
+            font-size: 4.2rem;
+            line-height: 0.78;
+            margin: 0.1em 0.07em 0 0;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .bio-prose .sign-off {
+            margin-top: 2rem;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        /* ── Ornamental divider ── */
+        .ornament {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 0.6em;
+            margin: 2.75rem 0;
+            user-select: none;
+        }
+
+        /* ── Section headings ── */
+        h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── Skills grid ── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: 0.55rem 1.5rem;
+            font-size: 0.97rem;
+        }
+        .skill-label { color: var(--muted); font-style: italic; white-space: nowrap; }
+
+        /* ── Certificates ── */
+        .item-list { list-style: none; }
+        .item-list li {
+            border-bottom: 1px solid var(--border);
+            padding: 0.9rem 0;
+        }
+        .item-list li:first-child { border-top: 1px solid var(--border); }
+
+        .cert-name { font-weight: 500; margin-bottom: 0.15rem; }
+        .cert-meta { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+        /* ── Social links ── */
+        .social-row {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 1.25rem;
+        }
+        .social-row a {
+            font-size: 0.88rem;
+            color: var(--muted);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+        }
+        .social-row a:hover { color: var(--link); border-color: var(--accent); }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-block;
+            margin-top: 2.5rem;
+            font-size: 0.92rem;
+            font-style: italic;
+        }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--link); }
+
+        @media (max-width: 520px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 0.15rem;
+            }
+            .skill-label { margin-top: 0.6rem; }
         }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body>
+<div class="wrap">
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md z-50 shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="index.html" class="font-['Pacifico'] text-2xl text-primary">mapalo</a>
-            <nav class="hidden md:flex items-center space-x-6">
-                <a href="index.html#blog"
-                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Blog</a>
-                <a href="index.html#projects"
-                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Projects</a>
-                <a href="index.html#skills"
-                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Skills</a>
-                <a href="index.html#contact"
-                    class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Contact</a>
-                <a href="bio.html"
-                    class="text-primary font-semibold transition-colors duration-200">Bio</a>
-            </nav>
-        </div>
+    <header>
+        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
+        <nav>
+            <a href="index.html#writing">Writing</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#certificates">Certificates</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="bio.html" class="active">Bio</a>
+            <a href="notebook.html">Notebook</a>
+        </nav>
     </header>
 
-    <!-- Bio Section -->
-    <section class="py-20 bg-white min-h-screen">
-        <div class="container mx-auto px-4">
-            <div class="bio-content">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-8 text-center">Mapalo's Bio</h1>
-                <p class="text-center text-gray-500 mb-12 italic">Not as long as other autobiographies but every bit as ambitious.</p>
+    <!-- Page title -->
+    <div class="page-header">
+        <h1>Bio</h1>
+        <p>Not as long as other autobiographies, but every bit as ambitious.</p>
+    </div>
 
-                <div class="text-gray-700 text-lg">
-                    <p>
-                        Hey there, I'm Mapalo. I'm a software developer, problem solver, and someone who genuinely enjoys making things work better than they did before.
-                    </p>
+    <!-- Bio prose -->
+    <div class="bio-prose">
+        <p>Hey there, I'm Mapalo. I'm a software developer, ICT graduate, and someone
+        who genuinely enjoys making things work better than they did before. I'm based
+        in Lusaka, Zambia, and I build across the full stack — from React Native mobile
+        apps to ESP32 firmware and LoRaWAN sensor networks.</p>
 
-                    <p>
-                        I build full-stack applications with a focus on clean code, performance, and user experience. Right now, I'm working on cross-platform event and ticketing apps using React Native, SwiftUI, and Supabase—bringing seamless experiences to mobile and beyond.
-                    </p>
+        <p>My final year project was a smart grid monitoring system for ZESCO, Zambia's
+        national electricity utility. It collects real-time electricity data from ESP32
+        sensor nodes over LoRaWAN, routes it through ChirpStack, stores it in Supabase,
+        and surfaces it across two React dashboards — one for grid operators, one for
+        consumers. That project taught me more about the gap between a working prototype
+        and a deployed system than anything else I've done.</p>
 
-                    <p>
-                        I have a thing for well-designed systems. One of my favorite books is <em>The Design of Everyday Things</em> by Donald Norman. I believe good design isn't just about aesthetics—it's about making complex things feel simple and intuitive.
-                    </p>
+        <p>I have a thing for well-designed systems. One of my favourite books is
+        <em>The Design of Everyday Things</em> by Donald Norman — because good design
+        isn't just aesthetics, it's about making complex things feel obvious. That idea
+        shows up everywhere in how I think about software.</p>
 
-                    <p>
-                        When I'm not coding, I'm probably exploring new tech, reading about AI and automation, or diving into algorithmic trading strategies. I built an NNFX trading robot in MQL5, which taught me a lot about discipline, risk management, and the importance of testing your assumptions.
-                    </p>
+        <p>When I'm not coding, I'm reading about AI and automation, or thinking about
+        algorithmic trading. I built an NNFX trading robot in MQL5, which taught me a lot
+        about discipline, risk management, and the importance of testing your assumptions —
+        especially when the code trades real money while you sleep.</p>
 
-                    <p>
-                        I'm also passionate about education and accessibility. I recently worked on research exploring AI-powered language translation tools to boost tourism in Zambia—because technology should help bridge gaps, not create them.
-                    </p>
+        <p>I also care about technology as a bridge. My research on AI-powered language
+        translation for tourism in Zambia was accepted by ZICTA in 2025 — because
+        technology should help close gaps, not widen them.</p>
 
-                    <p>
-                        My life goal? To keep building things that matter. Maybe one day I'll write a book about software craftsmanship, or create a product that helps thousands of people solve a real problem. Who knows—maybe I'll even start a tech community in Zambia that inspires the next generation of developers.
-                    </p>
+        <p>My goal is to keep building things that matter. Maybe one day I'll write about
+        software craftsmanship, or create a product that helps thousands of people solve
+        a real problem, or help grow a tech community in Zambia that inspires the next
+        generation of developers. Who knows. For now: keep learning, keep shipping.</p>
 
-                    <p>
-                        One thing's for sure: I'll keep learning, keep building, and keep pushing myself to do better work. Because at the end of the day, that's what it's all about.
-                    </p>
+        <p class="sign-off">Stay curious,<br>— Mapalo</p>
 
-                    <p class="mt-8">
-                        If you enjoyed reading this and want to connect, feel free to reach out. I'm always up for a good conversation about tech, design, or life in general.
-                    </p>
+        <div class="social-row">
+            <a href="https://github.com/Penza2024" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a>
+            <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
+            <a href="mailto:mapalomusondapenza@gmail.com">Email</a>
+        </div>
+    </div>
 
-                    <p class="font-medium">
-                        Stay curious,<br>
-                        — Mapalo
-                    </p>
-                </div>
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
-                <!-- Social Links -->
-                <div class="flex justify-center space-x-4 mt-12">
-                    <a href="https://github.com/Penza2024" target="_blank"
-                        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors duration-200">
-                        <i class="ri-github-fill ri-xl"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank"
-                        class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
-                        <i class="ri-linkedin-fill ri-xl"></i>
-                    </a>
-                    <a href="https://twitter.com" target="_blank"
-                        class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors duration-200">
-                        <i class="ri-twitter-fill ri-xl"></i>
-                    </a>
-                    <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank"
-                        class="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition-colors duration-200">
-                        <i class="ri-code-box-fill ri-xl"></i>
-                    </a>
-                </div>
-
-                <!-- Back to Home -->
-                <div class="text-center mt-12">
-                    <a href="index.html"
-                        class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
-                        <i class="ri-arrow-left-line ri-lg mr-2"></i>
-                        Back to Home
-                    </a>
-                </div>
-            </div>
+    <!-- Skills -->
+    <section id="skills">
+        <h2>Skills &amp; Technologies</h2>
+        <div class="skills-grid">
+            <span class="skill-label">Languages</span>
+            <span>TypeScript, JavaScript, Python, Java, C++, MQL5, PHP</span>
+            <span class="skill-label">Mobile</span>
+            <span>React Native, Expo, SwiftUI</span>
+            <span class="skill-label">Web</span>
+            <span>React, Vite, Node.js, Express</span>
+            <span class="skill-label">Data</span>
+            <span>Supabase, PostgreSQL, Firebase, MySQL</span>
+            <span class="skill-label">IoT</span>
+            <span>ESP32, LoRaWAN, ChirpStack, MQTT, Serial</span>
+            <span class="skill-label">DevOps</span>
+            <span>Docker, Kubernetes, GitHub Actions, CI/CD</span>
+            <span class="skill-label">Tools</span>
+            <span>Git, Xcode, Postman, Tkinter</span>
         </div>
     </section>
 
+    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <!-- Certificates -->
+    <section id="certificates">
+        <h2>Certificates</h2>
+        <ul class="item-list">
+            <li>
+                <div class="cert-name">
+                    <a href="images/certificate1.png" target="_blank">MetaTrader 5 Algorithmic Trading</a>
+                </div>
+                <div class="cert-meta">Coursera · January 2024</div>
+            </li>
+            <li>
+                <div class="cert-name">
+                    <a href="images/Chart.png" target="_blank">Huawei Artificial Intelligence and Applications</a>
+                </div>
+                <div class="cert-meta">Huawei Talent Online · 2025</div>
+            </li>
+            <li>
+                <div class="cert-name">
+                    <a href="images/certificate4.png" target="_blank">Kaggle: Intro to Deep Learning</a>
+                </div>
+                <div class="cert-meta">Kaggle Courses · 2024</div>
+            </li>
+        </ul>
+    </section>
+
+    <a class="back-link" href="index.html">&larr; Back to home</a>
+
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-400">&copy; 2025 Mapalo Musonda. Built with passion and code.</p>
-        </div>
+    <footer>
+        <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
+        <span>
+            <a href="https://github.com/Penza2024" target="_blank">GitHub</a> ·
+            <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a> ·
+            <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
+        </span>
     </footer>
 
+</div>
 </body>
-
 </html>
