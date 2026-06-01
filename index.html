@@ -104,15 +104,36 @@
             gap: 2.5rem;
         }
 
-        .hero-photo {
+        /* ── Pixel 3D avatar ── */
+        @keyframes float-3d {
+            0%   { transform: perspective(500px) rotateY(-7deg) rotateX(4deg); }
+            25%  { transform: perspective(500px) rotateY(2deg)  rotateX(-3deg); }
+            50%  { transform: perspective(500px) rotateY(7deg)  rotateX(-4deg); }
+            75%  { transform: perspective(500px) rotateY(-2deg) rotateX(3deg); }
+            100% { transform: perspective(500px) rotateY(-7deg) rotateX(4deg); }
+        }
+
+        .hero-photo-wrap {
             flex-shrink: 0;
+            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both,
+                       float-3d 9s ease-in-out 1.2s infinite;
+            filter: drop-shadow(0 0 10px rgba(100,255,218,0.45))
+                    drop-shadow(0 0 35px rgba(100,255,218,0.18));
+            transform-style: preserve-3d;
+            cursor: crosshair;
+            transition: filter 0.3s;
+        }
+        .hero-photo-wrap:hover {
+            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+            filter: drop-shadow(0 0 18px rgba(100,255,218,0.7))
+                    drop-shadow(0 0 50px rgba(100,255,218,0.3));
+        }
+        #hero-canvas {
+            display: block;
             width: 108px;
             height: 108px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 0 5px var(--accent-dim), 0 0 50px var(--accent-glow);
-            animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+            image-rendering: pixelated;
         }
 
         .hero-text { flex: 1; min-width: 0; }
@@ -461,7 +482,9 @@
     <!-- Hero -->
     <section id="hero">
         <div class="hero-inner">
-            <img class="hero-photo" src="images/profilePicture.jpeg" alt="Mapalo Musonda">
+            <div class="hero-photo-wrap">
+                <canvas id="hero-canvas" width="108" height="108" aria-label="Mapalo Musonda"></canvas>
+            </div>
             <div class="hero-text">
                 <h1 class="hero-name">Mapalo Musonda</h1>
                 <p class="hero-role"><span class="typed"></span><span class="cursor"></span></p>
@@ -813,6 +836,52 @@ document.querySelectorAll('.copy-email').forEach(link => {
         });
     });
 });
+
+// ── Pixel avatar ──────────────────────────────────────────────────────────
+(function() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx  = canvas.getContext('2d');
+    const SIZE = 108;
+    const PX   = 6;                        // block size in real pixels
+    const GRID = Math.floor(SIZE / PX);    // 18 × 18 grid
+
+    const img = new Image();
+    img.onload = function() {
+        // ① Downsample to the pixel grid
+        const tmp = document.createElement('canvas');
+        tmp.width = tmp.height = GRID;
+        const tc = tmp.getContext('2d');
+        tc.drawImage(img, 0, 0, GRID, GRID);
+
+        // ② Fill dark background inside circle
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, SIZE, SIZE);
+
+        // ③ Draw each pixel block
+        for (let y = 0; y < GRID; y++) {
+            for (let x = 0; x < GRID; x++) {
+                const d = tc.getImageData(x, y, 1, 1).data;
+                if (d[3] < 20) continue;
+                ctx.fillStyle = `rgb(${d[0]},${d[1]},${d[2]})`;
+                ctx.fillRect(x * PX, y * PX, PX - 1, PX - 1);
+            }
+        }
+        ctx.restore();
+
+        // ④ Accent ring
+        ctx.beginPath();
+        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
+        ctx.strokeStyle = '#64ffda';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    };
+    img.src = 'images/profilePicture.jpeg';
+})();
 
 // ── Contact form ───────────────────────────────────────────────────────────
 document.getElementById('contact-form').addEventListener('submit', function(e) {

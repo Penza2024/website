@@ -222,71 +222,118 @@
 
     <div class="page-header">
         <h1>Uses</h1>
-        <p>Hardware, software, and tools I reach for every day.</p>
+        <p>Hardware, software, and tools I actually use — sourced from my Applications folder.</p>
     </div>
 
-    <!-- Hardware -->
+    <!-- Machine -->
     <section>
-        <h2>Hardware</h2>
+        <h2>Machine</h2>
         <ul class="uses-list">
             <li>
-                <div class="uses-name">MacBook Pro</div>
-                <div class="uses-desc">Primary machine for everything — iOS dev via Xcode, React Native builds, and running Docker stacks locally.</div>
+                <div class="uses-name">macOS (OpenCore patched)</div>
+                <div class="uses-desc">Running macOS Sequoia on patched hardware via OpenCore Legacy Patcher. Macs Fan Control keeps temps in check.</div>
                 <span class="uses-tag">daily driver</span>
             </li>
             <li>
+                <div class="uses-name">Raspberry Pi</div>
+                <div class="uses-desc">Used for network experiments and as a local server. Raspberry Pi Imager handles OS flashing.</div>
+                <span class="uses-tag">hardware</span>
+            </li>
+            <li>
                 <div class="uses-name">ESP32-WROOM-32 (38-pin)</div>
-                <div class="uses-desc">The microcontroller of choice for IoT projects. Used in the Smart Grid System and Predictive Maintenance Node. Runs C++ firmware over the Arduino framework.</div>
+                <div class="uses-desc">Microcontroller of choice for IoT projects — Smart Grid System and Predictive Maintenance Node. Firmware flashed via CP210x USB serial driver.</div>
                 <span class="uses-tag">hardware</span>
             </li>
             <li>
                 <div class="uses-name">EBYTE E220 LoRa Module</div>
-                <div class="uses-desc">868/915 MHz LoRa transceiver used for long-range, low-power sensor communication. The reason the E220 Configurator GUI exists.</div>
+                <div class="uses-desc">868/915 MHz LoRa transceiver for long-range, low-power sensor communication. The direct reason the E220 Configurator GUI exists.</div>
                 <span class="uses-tag">hardware</span>
             </li>
             <li>
-                <div class="uses-name">DHT11 / SW-420 / KY-038</div>
-                <div class="uses-desc">Temperature & humidity, vibration, and sound sensors wired to the ESP32 Predictive Maintenance Node. All run on 3.3V.</div>
+                <div class="uses-name">DHT11 · SW-420 · KY-038</div>
+                <div class="uses-desc">Temperature/humidity, vibration, and sound sensors used in the Predictive Maintenance Node. All run on 3.3V GPIO.</div>
                 <span class="uses-tag">sensors</span>
             </li>
         </ul>
     </section>
 
-    <!-- Editor & Terminal -->
+    <!-- Editors -->
     <section>
-        <h2>Editor &amp; Terminal</h2>
+        <h2>Editors</h2>
         <ul class="uses-list">
             <li>
                 <div class="uses-name">VS Code</div>
-                <div class="uses-desc">Primary editor for TypeScript, React Native, Python, and C++. Extensions: ESLint, Prettier, Tailwind CSS IntelliSense, Arduino.</div>
+                <div class="uses-desc">Primary editor. TypeScript, React Native, Python, C++. Claude Code extension runs inside it for AI-assisted work.</div>
+                <span class="uses-tag">editor</span>
+            </li>
+            <li>
+                <div class="uses-name">Cursor</div>
+                <div class="uses-desc">AI-first fork of VS Code. Used when I want inline generation and multi-file edits with full context awareness.</div>
+                <span class="uses-tag">editor</span>
+            </li>
+            <li>
+                <div class="uses-name">Windsurf</div>
+                <div class="uses-desc">Codeium's agentic IDE. Another AI editor I rotate through depending on the task.</div>
                 <span class="uses-tag">editor</span>
             </li>
             <li>
                 <div class="uses-name">Xcode</div>
-                <div class="uses-desc">Required for SwiftUI development and signing iOS builds. Also the simulator for React Native iOS testing.</div>
+                <div class="uses-desc">Required for SwiftUI development, iOS app signing, and the React Native iOS simulator.</div>
                 <span class="uses-tag">editor</span>
             </li>
             <li>
-                <div class="uses-name">zsh + oh-my-zsh</div>
-                <div class="uses-desc">Shell of choice. Plugins: git, z (jump directories), syntax-highlighting.</div>
+                <div class="uses-name">Arduino IDE</div>
+                <div class="uses-desc">For writing and flashing C++ firmware to ESP32 boards. Used heavily in IoT projects alongside PlatformIO.</div>
+                <span class="uses-tag">firmware</span>
+            </li>
+            <li>
+                <div class="uses-name">zsh</div>
+                <div class="uses-desc">Shell of choice on macOS. Standard setup, nothing fancy.</div>
                 <span class="uses-tag">terminal</span>
             </li>
         </ul>
     </section>
 
-    <!-- Software & Apps -->
+    <!-- AI Tools -->
     <section>
-        <h2>Software &amp; Apps</h2>
+        <h2>AI Tools</h2>
         <ul class="uses-list">
             <li>
-                <div class="uses-name">Docker Desktop</div>
-                <div class="uses-desc">Running ChirpStack, MySQL, and multi-service stacks locally. Also the local Kubernetes cluster for Incredibulls testing.</div>
+                <div class="uses-name">Claude</div>
+                <div class="uses-desc">Daily driver for reasoning, writing, and code review. The desktop app and Claude Code CLI are both open most of the day.</div>
+                <span class="uses-tag">ai</span>
+            </li>
+            <li>
+                <div class="uses-name">Ollama + GPT4All</div>
+                <div class="uses-desc">Local LLM inference. Used when I need to run models offline or experiment with smaller open-weights models without sending data to an API.</div>
+                <span class="uses-tag">ai · local</span>
+            </li>
+            <li>
+                <div class="uses-name">Kiro</div>
+                <div class="uses-desc">AWS's AI IDE — exploring spec-driven development where the model plans before it codes.</div>
+                <span class="uses-tag">ai · ide</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Software -->
+    <section>
+        <h2>Software</h2>
+        <ul class="uses-list">
+            <li>
+                <div class="uses-name">Docker</div>
+                <div class="uses-desc">Running ChirpStack, MySQL, and multi-service stacks locally. Most backend projects live in containers from day one.</div>
                 <span class="uses-tag">devops</span>
             </li>
             <li>
                 <div class="uses-name">Postman</div>
-                <div class="uses-desc">API testing and collection management across Supabase edge functions, Node.js APIs, and ChirpStack webhooks.</div>
+                <div class="uses-desc">API testing across Supabase edge functions, Node.js APIs, and ChirpStack webhooks.</div>
                 <span class="uses-tag">dev tool</span>
+            </li>
+            <li>
+                <div class="uses-name">Figma</div>
+                <div class="uses-desc">UI design and prototyping before building. Useful for planning mobile layouts before touching React Native.</div>
+                <span class="uses-tag">design</span>
             </li>
             <li>
                 <div class="uses-name">MetaTrader 5</div>
@@ -295,13 +342,40 @@
             </li>
             <li>
                 <div class="uses-name">Expo Go</div>
-                <div class="uses-desc">For live-reloading React Native apps on a physical device during development of Reservit and BusTicKTeT.</div>
+                <div class="uses-desc">Live-reload React Native apps on a physical device during development — fastest feedback loop for mobile UI.</div>
                 <span class="uses-tag">mobile</span>
             </li>
+        </ul>
+    </section>
+
+    <!-- CLI Tools -->
+    <section>
+        <h2>CLI Tools</h2>
+        <ul class="uses-list">
             <li>
-                <div class="uses-name">TablePlus</div>
-                <div class="uses-desc">GUI for browsing Supabase/PostgreSQL and MySQL databases. Cleaner than psql for exploratory queries.</div>
-                <span class="uses-tag">database</span>
+                <div class="uses-name">Claude Code</div>
+                <div class="uses-desc">Anthropic's CLI for Claude. Handles large refactors, multi-file edits, and agentic tasks directly from the terminal — what built this site.</div>
+                <span class="uses-tag">ai · cli</span>
+            </li>
+            <li>
+                <div class="uses-name">Wrangler</div>
+                <div class="uses-desc">Cloudflare's CLI for deploying Workers and Pages. Used for this site's deployment pipeline.</div>
+                <span class="uses-tag">deploy · cli</span>
+            </li>
+            <li>
+                <div class="uses-name">Git</div>
+                <div class="uses-desc">Version control for everything. GitHub for remote hosting and Actions for CI/CD.</div>
+                <span class="uses-tag">vcs · cli</span>
+            </li>
+            <li>
+                <div class="uses-name">npm / npx</div>
+                <div class="uses-desc">Package management and script running across all TypeScript and React projects.</div>
+                <span class="uses-tag">cli</span>
+            </li>
+            <li>
+                <div class="uses-name">Expo CLI / EAS</div>
+                <div class="uses-desc">Building, running, and submitting React Native apps. EAS Build handles cloud builds for iOS and Android.</div>
+                <span class="uses-tag">mobile · cli</span>
             </li>
         </ul>
     </section>
@@ -312,22 +386,22 @@
         <ul class="uses-list">
             <li>
                 <div class="uses-name">TypeScript</div>
-                <div class="uses-desc">Default language for any new web or mobile project. The type safety catches enough real bugs to be worth the overhead every time.</div>
+                <div class="uses-desc">Default for any new project. The type safety pays for itself in caught bugs before runtime.</div>
                 <span class="uses-tag">language</span>
             </li>
             <li>
                 <div class="uses-name">Supabase</div>
-                <div class="uses-desc">Backend of choice for mobile apps — PostgreSQL, auth, edge functions, and realtime out of the box. Replaced Firebase for most new projects.</div>
+                <div class="uses-desc">Backend of choice for mobile apps — PostgreSQL, auth, edge functions, and realtime. Replaced Firebase for most new work.</div>
                 <span class="uses-tag">backend</span>
             </li>
             <li>
                 <div class="uses-name">Expo (managed workflow)</div>
-                <div class="uses-desc">React Native without the native configuration pain. EAS Build handles CI/CD for mobile.</div>
+                <div class="uses-desc">React Native without the native config headaches. EAS Build handles CI/CD.</div>
                 <span class="uses-tag">mobile</span>
             </li>
             <li>
                 <div class="uses-name">Vite</div>
-                <div class="uses-desc">Default bundler for React web projects. The dev server speed is hard to go back from.</div>
+                <div class="uses-desc">Default bundler for React web projects. Dev server speed is hard to give up.</div>
                 <span class="uses-tag">web</span>
             </li>
         </ul>
