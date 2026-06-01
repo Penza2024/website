@@ -697,6 +697,7 @@
 
 <div id="toast">Message sent!</div>
 
+<script src="head-data.js"></script>
 <script>
 // ── Canvas particle network ────────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
@@ -815,10 +816,10 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── Custom 3D low-poly head — zero dependencies, pure Canvas 2D ───────────
+// ── Real 3D head — Three.js female02 mesh, Canvas 2D renderer ─────────────
 (function() {
     const wrap = document.getElementById('head-wrap');
-    if (!wrap) return;
+    if (!wrap || typeof HEAD_V === 'undefined') return;
 
     const W = 180, H = 180;
     const cv = document.createElement('canvas');
@@ -826,54 +827,7 @@ document.querySelectorAll('.copy-email').forEach(link => {
     wrap.appendChild(cv);
     const ctx = cv.getContext('2d');
 
-    // ── Build head geometry (deformed UV sphere) ───────────────────────────
-    // Camera looks from -Z∞ toward +Z, so front face = most negative Z
-    const LATS = 14, LONS = 16;
-    const V = [], F = [];
-
-    for (let la = 0; la <= LATS; la++) {
-        const theta = la / LATS * Math.PI;         // 0 = top, π = bottom
-        for (let lo = 0; lo < LONS; lo++) {
-            const phi = lo / LONS * 2 * Math.PI;
-
-            let x = Math.sin(theta) * Math.cos(phi);
-            let y = Math.cos(theta);
-            let z = Math.sin(theta) * Math.sin(phi);
-
-            // ① Elongate vertically — heads are taller than wide
-            y *= 1.28;
-
-            // ② Narrow toward the chin
-            if (y < -0.25) {
-                const q = Math.min(1, (-y - 0.25) / 0.75);
-                x *= 1 - q * 0.48;
-                z *= 1 - q * 0.48;
-            }
-
-            // ③ Nose bump — front face sits at phi ≈ 3π/2 (most negative z)
-            const rawZ = Math.sin(theta) * Math.sin(phi);
-            if (rawZ < -0.25) {
-                const peak = Math.exp(-((y + 0.12) ** 2) / 0.09);
-                z += rawZ * peak * 0.3;  // push further -Z toward camera
-            }
-
-            V.push([x, y, z]);
-        }
-    }
-
-    // Quads → two triangles
-    for (let la = 0; la < LATS; la++) {
-        for (let lo = 0; lo < LONS; lo++) {
-            const a =  la      * LONS + lo;
-            const b =  la      * LONS + (lo + 1) % LONS;
-            const c = (la + 1) * LONS + lo;
-            const d = (la + 1) * LONS + (lo + 1) % LONS;
-            F.push([a, b, d]);
-            F.push([a, d, c]);
-        }
-    }
-
-    // ── Transforms (same pipeline as icosahedron — confirmed working) ──────
+    // ── Same transforms as the working icosahedron ─────────────────────────
     const rotY = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x*c+z*s,y,-x*s+z*c]; };
     const rotX = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x,y*c-z*s,y*s+z*c]; };
     const proj  = ([x,y,z],oy) => { const d=4.5,s=d/(d+z)*72; return [W/2+x*s, H/2+oy-y*s]; };
@@ -885,13 +839,12 @@ document.querySelectorAll('.copy-email').forEach(link => {
         my = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    // Light from top-left-front (toward -Z = toward camera)
+    // Light: top-left, toward camera (-Z)
     const LD = [-0.3, 0.8, -0.52];
     const ln  = Math.hypot(...LD);
     const [LX, LY, LZ] = LD.map(v => v / ln);
 
-    // Start with slight 3/4 angle so face is immediately recognisable
-    let ry = Math.PI / 5, rx = 0.12, t = 0;
+    let ry = 0, rx = 0.08, t = 0;
 
     (function frame() {
         requestAnimationFrame(frame);
@@ -900,11 +853,10 @@ document.querySelectorAll('.copy-email').forEach(link => {
         rx  = Math.max(-0.5, Math.min(0.5, rx + my * 0.0015));
 
         const oy  = Math.sin(t) * 9;
-        const TV  = V.map(v => rotX(rotY(v, ry), rx));
+        const TV  = HEAD_V.map(v => rotX(rotY(v, ry), rx));
         const P   = TV.map(v => proj(v, oy));
 
-        // Painter: descending depth → draw far faces first
-        const sorted = F.map(([a,b,c]) => ({
+        const sorted = HEAD_F.map(([a,b,c]) => ({
             a, b, c, depth: (TV[a][2]+TV[b][2]+TV[c][2]) / 3
         })).sort((p,q) => q.depth - p.depth);
 
@@ -912,11 +864,8 @@ document.querySelectorAll('.copy-email').forEach(link => {
 
         sorted.forEach(({a, b, c}) => {
             const [ax,ay]=P[a],[bx,by]=P[b],[cx,cy]=P[c];
-
-            // Backface culling — same sign as icosahedron (confirmed working)
             if ((bx-ax)*(cy-ay) - (by-ay)*(cx-ax) > 0) return;
 
-            // 3D face normal → Phong-style diffuse lighting
             const [Ax,Ay,Az]=TV[a],[Bx,By,Bz]=TV[b],[Cx,Cy,Cz]=TV[c];
             const ex=Bx-Ax,ey=By-Ay,ez=Bz-Az, fx=Cx-Ax,fy=Cy-Ay,fz=Cz-Az;
             const nx=ey*fz-ez*fy, ny=ez*fx-ex*fz, nz=ex*fy-ey*fx;
@@ -927,12 +876,10 @@ document.querySelectorAll('.copy-email').forEach(link => {
             ctx.beginPath();
             ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.lineTo(cx,cy);
             ctx.closePath();
-
-            // Dark teal fill, bright on lit faces
             ctx.fillStyle = `rgba(${~~(6+sh*30)},${~~(16+sh*55)},${~~(13+sh*46)},0.92)`;
             ctx.fill();
             ctx.strokeStyle = `rgba(100,255,218,${Math.min(1, 0.15+lit*0.75)})`;
-            ctx.lineWidth = 0.75;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
         });
     })();
