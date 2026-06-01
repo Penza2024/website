@@ -107,29 +107,32 @@
         /* ── 3D floating head ── */
         .hero-photo-wrap {
             flex-shrink: 0;
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             position: relative;
             cursor: grab;
             animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
         }
 
-        /* border-radius lives on the canvas, not the wrapper,
-           so WebGL isn't clipped before it renders */
-        .hero-photo-wrap canvas,
-        .hero-photo-wrap img {
+        /* No border-radius, no overflow, no border on the canvas —
+           nothing that can interfere with WebGL compositing */
+        .hero-photo-wrap canvas {
             display: block;
-            width: 150px !important;
-            height: 150px !important;
-            border-radius: 50%;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 0 5px rgba(100,255,218,0.08),
-                        0 0 28px rgba(100,255,218,0.25),
-                        0 0 65px rgba(100,255,218,0.1);
+            width: 160px !important;
+            height: 160px !important;
         }
 
-        /* shown while Three.js loads */
-        .head-fallback { object-fit: cover; }
+        /* Fallback shown until Three.js is ready */
+        .head-fallback {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 0 5px rgba(100,255,218,0.08),
+                        0 0 28px rgba(100,255,218,0.25);
+        }
 
         .hero-text { flex: 1; min-width: 0; }
 
@@ -835,16 +838,21 @@ document.querySelectorAll('.copy-email').forEach(link => {
 
 // ── Three.js 3D floating head ──────────────────────────────────────────────
 (function() {
-    const SIZE = 150;
+    const SIZE = 160;
     const wrap = document.getElementById('head-wrap');
     if (!wrap || typeof THREE === 'undefined') return;
 
-    // Load image via plain <img> to avoid TextureLoader CORS issues
     const imgEl = wrap.querySelector('.head-fallback');
 
     function buildScene() {
-        // Hide fallback — Three.js canvas takes over
-        if (imgEl) imgEl.style.display = 'none';
+        // ① Draw photo onto an offscreen canvas — avoids every CORS /
+        //   element-visibility / texture-invalidation issue
+        const oc = document.createElement('canvas');
+        oc.width = oc.height = 512;
+        oc.getContext('2d').drawImage(imgEl, 0, 0, 512, 512);
+
+        // ② Hide fallback, inject Three.js canvas
+        imgEl.style.display = 'none';
 
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(SIZE, SIZE);
@@ -853,56 +861,70 @@ document.querySelectorAll('.copy-email').forEach(link => {
         wrap.appendChild(renderer.domElement);
 
         const scene  = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-        camera.position.z = 3.3;
+        const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+        camera.position.z = 3.6;
 
-        // Build texture from the already-loaded img element
-        const tex = new THREE.Texture(imgEl);
-        tex.needsUpdate = true;
+        // ③ CanvasTexture — pixel data already in RAM, zero network calls
+        const tex = new THREE.CanvasTexture(oc);
         try { tex.colorSpace = THREE.SRGBColorSpace; } catch(e) {}
 
+        // Face sphere
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(1, 64, 64),
-            new THREE.MeshStandardMaterial({ map: tex, roughness: 0.62, metalness: 0.04 })
+            new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6, metalness: 0.04 })
         );
         scene.add(sphere);
 
-        // Lighting
-        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+        // Teal glow ring — slightly larger back-face sphere
+        const glow = new THREE.Mesh(
+            new THREE.SphereGeometry(1.12, 32, 32),
+            new THREE.MeshStandardMaterial({
+                color: 0x64ffda, emissive: 0x64ffda, emissiveIntensity: 0.6,
+                transparent: true, opacity: 0.08, side: THREE.BackSide,
+            })
+        );
+        scene.add(glow);
+
+        // ④ Lighting
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
         const key = new THREE.DirectionalLight(0xffffff, 1.4);
         key.position.set(2, 3, 4);
         scene.add(key);
-        const rim = new THREE.PointLight(0x64ffda, 4, 8);
+        const rim = new THREE.PointLight(0x64ffda, 4.5, 8);
         rim.position.set(-2.5, 0.5, -1.5);
         scene.add(rim);
-        const fill = new THREE.PointLight(0x64ffda, 0.7, 6);
+        const fill = new THREE.PointLight(0x64ffda, 0.8, 6);
         fill.position.set(0, -2.5, 2);
         scene.add(fill);
 
-        // Mouse tracking
+        // ⑤ Mouse influence
         let mx = 0, my = 0;
         document.addEventListener('mousemove', e => {
             mx = (e.clientX / window.innerWidth  - 0.5) * 2;
             my = (e.clientY / window.innerHeight - 0.5) * 2;
         });
 
-        // Animate
+        // ⑥ Animate
         let t = 0, autoRot = 0;
         (function tick() {
             requestAnimationFrame(tick);
             t += 0.008; autoRot += 0.003;
-            sphere.position.y = Math.sin(t) * 0.07;
-            sphere.rotation.y += (autoRot + mx * 0.55 - sphere.rotation.y) * 0.04;
-            sphere.rotation.x += (my * -0.3        - sphere.rotation.x) * 0.04;
+            sphere.position.y = glow.position.y = Math.sin(t) * 0.08;
+            const tY = autoRot + mx * 0.55;
+            sphere.rotation.y += (tY      - sphere.rotation.y) * 0.04;
+            sphere.rotation.x += (my * -0.3 - sphere.rotation.x) * 0.04;
+            glow.rotation.y = sphere.rotation.y;
+            glow.rotation.x = sphere.rotation.x;
             renderer.render(scene, camera);
         })();
     }
 
-    if (imgEl && imgEl.complete) {
+    // Wait for the fallback img to fully decode before drawing it to canvas
+    if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
         buildScene();
     } else if (imgEl) {
         imgEl.onload  = buildScene;
-        imgEl.onerror = function() { /* keep fallback visible */ };
+        imgEl.onerror = function() { /* leave fallback visible */ };
     }
 })();
 
