@@ -80,6 +80,28 @@
             border-bottom-color: var(--accent);
         }
 
+        /* ── Page entrance animations ── */
+        @keyframes enter-down {
+            from { opacity: 0; transform: translateY(-14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes enter-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes enter-right {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        header {
+            animation: enter-down 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
         /* ── Profile image floated into intro ── */
         .profile-img {
             float: right;
@@ -91,10 +113,21 @@
             border: 3px solid var(--border);
             filter: sepia(8%) contrast(0.96);
             shape-outside: circle();
+            opacity: 0;
+            animation: enter-right 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
         }
 
         /* ── Intro drop-cap ── */
         .intro p { margin-bottom: 1rem; }
+
+        .intro p:nth-of-type(1) {
+            opacity: 0;
+            animation: enter-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+        }
+        .intro p:nth-of-type(2) {
+            opacity: 0;
+            animation: enter-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.48s forwards;
+        }
 
         .intro p:first-of-type::first-letter {
             float: left;
@@ -110,6 +143,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.3rem 1.25rem;
+            opacity: 0;
+            animation: enter-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.65s forwards;
         }
         .social-row a {
             font-size: 0.88rem;
