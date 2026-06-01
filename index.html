@@ -839,41 +839,47 @@ document.querySelectorAll('.copy-email').forEach(link => {
 
 // ── Pixel avatar ──────────────────────────────────────────────────────────
 (function() {
-    const canvas = document.getElementById('hero-canvas');
-    if (!canvas) return;
-    const ctx  = canvas.getContext('2d');
-    const SIZE = 108;
-    const PX   = 6;                        // block size in real pixels
-    const GRID = Math.floor(SIZE / PX);    // 18 × 18 grid
+    const hc = document.getElementById('hero-canvas');
+    if (!hc) return;
+    const ctx  = hc.getContext('2d');
+    const SIZE = 108, GRID = 18;
 
     const img = new Image();
     img.onload = function() {
-        // ① Downsample to the pixel grid
+        // ① Downsample to 18×18 on a tiny canvas
         const tmp = document.createElement('canvas');
         tmp.width = tmp.height = GRID;
         const tc = tmp.getContext('2d');
+        tc.imageSmoothingEnabled = false;
         tc.drawImage(img, 0, 0, GRID, GRID);
 
-        // ② Fill dark background inside circle
+        // ② Clip output to circle
         ctx.save();
         ctx.beginPath();
         ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
         ctx.clip();
-        ctx.fillStyle = '#0d1117';
-        ctx.fillRect(0, 0, SIZE, SIZE);
 
-        // ③ Draw each pixel block
-        for (let y = 0; y < GRID; y++) {
-            for (let x = 0; x < GRID; x++) {
-                const d = tc.getImageData(x, y, 1, 1).data;
-                if (d[3] < 20) continue;
-                ctx.fillStyle = `rgb(${d[0]},${d[1]},${d[2]})`;
-                ctx.fillRect(x * PX, y * PX, PX - 1, PX - 1);
-            }
-        }
+        // ③ Scale back up with smoothing OFF → visible pixel blocks
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(tmp, 0, 0, GRID, GRID, 0, 0, SIZE, SIZE);
         ctx.restore();
 
-        // ④ Accent ring
+        // ④ Teal accent ring
+        ctx.beginPath();
+        ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
+        ctx.strokeStyle = '#64ffda';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    };
+    img.onerror = function() {
+        // Fallback: initials
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, SIZE, SIZE);
+        ctx.fillStyle = '#64ffda';
+        ctx.font = 'bold 34px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('MM', SIZE / 2, SIZE / 2);
         ctx.beginPath();
         ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
         ctx.strokeStyle = '#64ffda';
