@@ -104,17 +104,16 @@
             gap: 2.5rem;
         }
 
-        /* ── 3D element ── */
+        /* ── 3D figure ── */
         .hero-3d {
             flex-shrink: 0;
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 340px;
             cursor: grab;
             animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+            align-self: flex-start;
         }
-        .hero-3d canvas {
-            display: block;
-        }
+        .hero-3d canvas { display: block; }
 
         .hero-text { flex: 1; min-width: 0; }
 
@@ -821,7 +820,7 @@ document.querySelectorAll('.copy-email').forEach(link => {
     const wrap = document.getElementById('head-wrap');
     if (!wrap || typeof HEAD_V === 'undefined') return;
 
-    const W = 180, H = 180;
+    const W = 160, H = 340;
     const cv = document.createElement('canvas');
     cv.width = W; cv.height = H;
     wrap.appendChild(cv);
@@ -830,7 +829,8 @@ document.querySelectorAll('.copy-email').forEach(link => {
     // ── Same transforms as the working icosahedron ─────────────────────────
     const rotY = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x*c+z*s,y,-x*s+z*c]; };
     const rotX = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x,y*c-z*s,y*s+z*c]; };
-    const proj  = ([x,y,z],oy) => { const d=4.5,s=d/(d+z)*72; return [W/2+x*s, H/2+oy-y*s]; };
+    // Scale 110 fits the full body in the taller canvas
+    const proj  = ([x,y,z],oy) => { const d=4.5,s=d/(d+z)*110; return [W/2+x*s, H/2+oy-y*s]; };
 
     // ── Mouse steer ────────────────────────────────────────────────────────
     let mx = 0, my = 0;
