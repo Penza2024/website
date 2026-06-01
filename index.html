@@ -815,7 +815,7 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── Custom 3D icosahedron — zero dependencies, pure Canvas 2D ─────────────
+// ── Custom 3D low-poly head — zero dependencies, pure Canvas 2D ───────────
 (function() {
     const wrap = document.getElementById('head-wrap');
     if (!wrap) return;
@@ -826,88 +826,113 @@ document.querySelectorAll('.copy-email').forEach(link => {
     wrap.appendChild(cv);
     const ctx = cv.getContext('2d');
 
-    // ① Icosahedron vertices (normalised to unit sphere)
-    const φ = (1 + Math.sqrt(5)) / 2;
-    const raw = [
-        [-1, φ,0],[1, φ,0],[-1,-φ,0],[1,-φ,0],
-        [0,-1, φ],[0,1, φ],[0,-1,-φ],[0,1,-φ],
-        [φ,0,-1],[φ,0,1],[-φ,0,-1],[-φ,0,1]
-    ];
-    const V = raw.map(v => { const l = Math.hypot(...v); return v.map(c=>c/l); });
+    // ── Build head geometry (deformed UV sphere) ───────────────────────────
+    // Camera looks from -Z∞ toward +Z, so front face = most negative Z
+    const LATS = 14, LONS = 16;
+    const V = [], F = [];
 
-    // ② 20 triangular faces
-    const F = [
-        [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
-        [1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],
-        [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
-        [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
-    ];
+    for (let la = 0; la <= LATS; la++) {
+        const theta = la / LATS * Math.PI;         // 0 = top, π = bottom
+        for (let lo = 0; lo < LONS; lo++) {
+            const phi = lo / LONS * 2 * Math.PI;
 
-    // ③ Rotation helpers
-    const rotY = ([x,y,z], a) => {
-        const c=Math.cos(a), s=Math.sin(a);
-        return [x*c+z*s, y, -x*s+z*c];
-    };
-    const rotX = ([x,y,z], a) => {
-        const c=Math.cos(a), s=Math.sin(a);
-        return [x, y*c-z*s, y*s+z*c];
-    };
+            let x = Math.sin(theta) * Math.cos(phi);
+            let y = Math.cos(theta);
+            let z = Math.sin(theta) * Math.sin(phi);
 
-    // ④ Perspective project to canvas coords
-    const project = ([x,y,z], offY) => {
-        const d = 4.2;                      // camera distance
-        const s = d / (d + z) * 74;        // scale
-        return [W/2 + x*s, H/2 + offY - y*s];
-    };
+            // ① Elongate vertically — heads are taller than wide
+            y *= 1.28;
 
-    // ⑤ Mouse steer
+            // ② Narrow toward the chin
+            if (y < -0.25) {
+                const q = Math.min(1, (-y - 0.25) / 0.75);
+                x *= 1 - q * 0.48;
+                z *= 1 - q * 0.48;
+            }
+
+            // ③ Nose bump — front face sits at phi ≈ 3π/2 (most negative z)
+            const rawZ = Math.sin(theta) * Math.sin(phi);
+            if (rawZ < -0.25) {
+                const peak = Math.exp(-((y + 0.12) ** 2) / 0.09);
+                z += rawZ * peak * 0.3;  // push further -Z toward camera
+            }
+
+            V.push([x, y, z]);
+        }
+    }
+
+    // Quads → two triangles
+    for (let la = 0; la < LATS; la++) {
+        for (let lo = 0; lo < LONS; lo++) {
+            const a =  la      * LONS + lo;
+            const b =  la      * LONS + (lo + 1) % LONS;
+            const c = (la + 1) * LONS + lo;
+            const d = (la + 1) * LONS + (lo + 1) % LONS;
+            F.push([a, b, d]);
+            F.push([a, d, c]);
+        }
+    }
+
+    // ── Transforms (same pipeline as icosahedron — confirmed working) ──────
+    const rotY = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x*c+z*s,y,-x*s+z*c]; };
+    const rotX = ([x,y,z],a) => { const c=Math.cos(a),s=Math.sin(a); return [x,y*c-z*s,y*s+z*c]; };
+    const proj  = ([x,y,z],oy) => { const d=4.5,s=d/(d+z)*72; return [W/2+x*s, H/2+oy-y*s]; };
+
+    // ── Mouse steer ────────────────────────────────────────────────────────
     let mx = 0, my = 0;
     document.addEventListener('mousemove', e => {
         mx = (e.clientX / window.innerWidth  - 0.5) * 2;
         my = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    let ry = 0, rx = 0.35, t = 0;
+    // Light from top-left-front (toward -Z = toward camera)
+    const LD = [-0.3, 0.8, -0.52];
+    const ln  = Math.hypot(...LD);
+    const [LX, LY, LZ] = LD.map(v => v / ln);
 
-    // ⑥ Render loop
+    // Start with slight 3/4 angle so face is immediately recognisable
+    let ry = Math.PI / 5, rx = 0.12, t = 0;
+
     (function frame() {
         requestAnimationFrame(frame);
         t  += 0.012;
-        ry += 0.008 + mx * 0.004;
-        rx += my * 0.001;
+        ry += 0.006 + mx * 0.004;
+        rx  = Math.max(-0.5, Math.min(0.5, rx + my * 0.0015));
 
-        const offY = Math.sin(t) * 10;     // float
+        const oy  = Math.sin(t) * 9;
+        const TV  = V.map(v => rotX(rotY(v, ry), rx));
+        const P   = TV.map(v => proj(v, oy));
 
-        // Transform all 12 vertices
-        const P = V.map(v => project(rotX(rotY(v, ry), rx), offY));
-        const Z = V.map(v => rotX(rotY(v, ry), rx)[2]); // depth of each vertex
-
-        // Sort faces back→front (painter's algorithm)
-        const faces = F.map(([a,b,c]) => ({
-            a, b, c,
-            depth: (Z[a]+Z[b]+Z[c]) / 3,
-        })).sort((x,y) => y.depth - x.depth);
+        // Painter: descending depth → draw far faces first
+        const sorted = F.map(([a,b,c]) => ({
+            a, b, c, depth: (TV[a][2]+TV[b][2]+TV[c][2]) / 3
+        })).sort((p,q) => q.depth - p.depth);
 
         ctx.clearRect(0, 0, W, H);
 
-        faces.forEach(({a, b, c}) => {
-            const [ax,ay] = P[a], [bx,by] = P[b], [cx,cy] = P[c];
+        sorted.forEach(({a, b, c}) => {
+            const [ax,ay]=P[a],[bx,by]=P[b],[cx,cy]=P[c];
 
-            // Backface culling — skip faces pointing away
-            const cross = (bx-ax)*(cy-ay) - (by-ay)*(cx-ax);
-            if (cross > 0) return;
+            // Backface culling — same sign as icosahedron (confirmed working)
+            if ((bx-ax)*(cy-ay) - (by-ay)*(cx-ax) > 0) return;
 
-            // Fill — brightness by depth
-            const d = Math.max(0, Math.min(1, (Z[a]+Z[b]+Z[c])/3 * 0.4 + 0.6));
+            // 3D face normal → Phong-style diffuse lighting
+            const [Ax,Ay,Az]=TV[a],[Bx,By,Bz]=TV[b],[Cx,Cy,Cz]=TV[c];
+            const ex=Bx-Ax,ey=By-Ay,ez=Bz-Az, fx=Cx-Ax,fy=Cy-Ay,fz=Cz-Az;
+            const nx=ey*fz-ez*fy, ny=ez*fx-ex*fz, nz=ex*fy-ey*fx;
+            const nl = Math.hypot(nx,ny,nz) || 1;
+            const lit = Math.max(0, nx/nl*LX + ny/nl*LY + nz/nl*LZ);
+            const sh  = 0.12 + lit * 0.88;
+
             ctx.beginPath();
             ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.lineTo(cx,cy);
             ctx.closePath();
-            ctx.fillStyle = `rgba(13,25,22,${0.55 + d*0.3})`;
-            ctx.fill();
 
-            // Wireframe edges
-            ctx.strokeStyle = `rgba(100,255,218,${0.4 + d*0.5})`;
-            ctx.lineWidth   = 0.9;
+            // Dark teal fill, bright on lit faces
+            ctx.fillStyle = `rgba(${~~(6+sh*30)},${~~(16+sh*55)},${~~(13+sh*46)},0.92)`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(100,255,218,${Math.min(1, 0.15+lit*0.75)})`;
+            ctx.lineWidth = 0.75;
             ctx.stroke();
         });
     })();
