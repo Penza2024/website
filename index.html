@@ -697,7 +697,6 @@
 
 <div id="toast">Message sent!</div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 <script>
 // ── Canvas particle network ────────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
@@ -816,72 +815,101 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── Three.js 3D shape (no image loading — pure geometry) ──────────────────
+// ── Custom 3D icosahedron — zero dependencies, pure Canvas 2D ─────────────
 (function() {
-    const SIZE = 180;
     const wrap = document.getElementById('head-wrap');
-    if (!wrap || typeof THREE === 'undefined') return;
+    if (!wrap) return;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(SIZE, SIZE);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0, 0);
-    wrap.appendChild(renderer.domElement);
+    const W = 180, H = 180;
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    wrap.appendChild(cv);
+    const ctx = cv.getContext('2d');
 
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    camera.position.z = 3.2;
+    // ① Icosahedron vertices (normalised to unit sphere)
+    const φ = (1 + Math.sqrt(5)) / 2;
+    const raw = [
+        [-1, φ,0],[1, φ,0],[-1,-φ,0],[1,-φ,0],
+        [0,-1, φ],[0,1, φ],[0,-1,-φ],[0,1,-φ],
+        [φ,0,-1],[φ,0,1],[-φ,0,-1],[-φ,0,1]
+    ];
+    const V = raw.map(v => { const l = Math.hypot(...v); return v.map(c=>c/l); });
 
-    // Torus knot — no image/texture, always works
-    const knot = new THREE.Mesh(
-        new THREE.TorusKnotGeometry(0.72, 0.26, 160, 32),
-        new THREE.MeshStandardMaterial({
-            color:     0x64ffda,
-            emissive:  0x0d3030,
-            roughness: 0.18,
-            metalness: 0.9,
-        })
-    );
-    scene.add(knot);
+    // ② 20 triangular faces
+    const F = [
+        [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
+        [1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],
+        [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
+        [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
+    ];
 
-    // Outer wireframe for extra depth
-    const wire = new THREE.Mesh(
-        new THREE.TorusKnotGeometry(0.72, 0.26, 80, 16),
-        new THREE.MeshBasicMaterial({ color: 0x64ffda, wireframe: true, transparent: true, opacity: 0.08 })
-    );
-    scene.add(wire);
+    // ③ Rotation helpers
+    const rotY = ([x,y,z], a) => {
+        const c=Math.cos(a), s=Math.sin(a);
+        return [x*c+z*s, y, -x*s+z*c];
+    };
+    const rotX = ([x,y,z], a) => {
+        const c=Math.cos(a), s=Math.sin(a);
+        return [x, y*c-z*s, y*s+z*c];
+    };
 
-    // Lighting
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-    const key = new THREE.DirectionalLight(0xffffff, 1.6);
-    key.position.set(3, 4, 5);
-    scene.add(key);
-    const rimA = new THREE.PointLight(0x64ffda, 5, 9);
-    rimA.position.set(-3, 1, -2);
-    scene.add(rimA);
-    const rimB = new THREE.PointLight(0x64ffda, 2, 6);
-    rimB.position.set(2, -2, 2);
-    scene.add(rimB);
+    // ④ Perspective project to canvas coords
+    const project = ([x,y,z], offY) => {
+        const d = 4.2;                      // camera distance
+        const s = d / (d + z) * 74;        // scale
+        return [W/2 + x*s, H/2 + offY - y*s];
+    };
 
-    // Mouse steer
+    // ⑤ Mouse steer
     let mx = 0, my = 0;
     document.addEventListener('mousemove', e => {
         mx = (e.clientX / window.innerWidth  - 0.5) * 2;
         my = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    let t = 0;
-    (function tick() {
-        requestAnimationFrame(tick);
-        t += 0.01;
-        // Base rotation + mouse steer
-        knot.rotation.x += 0.004 + my * 0.003;
-        knot.rotation.y += 0.007 + mx * 0.003;
-        wire.rotation.x  = knot.rotation.x;
-        wire.rotation.y  = knot.rotation.y;
-        // Float
-        knot.position.y = wire.position.y = Math.sin(t) * 0.1;
-        renderer.render(scene, camera);
+    let ry = 0, rx = 0.35, t = 0;
+
+    // ⑥ Render loop
+    (function frame() {
+        requestAnimationFrame(frame);
+        t  += 0.012;
+        ry += 0.008 + mx * 0.004;
+        rx += my * 0.001;
+
+        const offY = Math.sin(t) * 10;     // float
+
+        // Transform all 12 vertices
+        const P = V.map(v => project(rotX(rotY(v, ry), rx), offY));
+        const Z = V.map(v => rotX(rotY(v, ry), rx)[2]); // depth of each vertex
+
+        // Sort faces back→front (painter's algorithm)
+        const faces = F.map(([a,b,c]) => ({
+            a, b, c,
+            depth: (Z[a]+Z[b]+Z[c]) / 3,
+        })).sort((x,y) => y.depth - x.depth);
+
+        ctx.clearRect(0, 0, W, H);
+
+        faces.forEach(({a, b, c}) => {
+            const [ax,ay] = P[a], [bx,by] = P[b], [cx,cy] = P[c];
+
+            // Backface culling — skip faces pointing away
+            const cross = (bx-ax)*(cy-ay) - (by-ay)*(cx-ax);
+            if (cross > 0) return;
+
+            // Fill — brightness by depth
+            const d = Math.max(0, Math.min(1, (Z[a]+Z[b]+Z[c])/3 * 0.4 + 0.6));
+            ctx.beginPath();
+            ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.lineTo(cx,cy);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(13,25,22,${0.55 + d*0.3})`;
+            ctx.fill();
+
+            // Wireframe edges
+            ctx.strokeStyle = `rgba(100,255,218,${0.4 + d*0.5})`;
+            ctx.lineWidth   = 0.9;
+            ctx.stroke();
+        });
     })();
 })();
 
