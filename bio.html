@@ -7,7 +7,7 @@
     <title>Bio | Mapalo Musonda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -16,76 +16,125 @@
         }
 
         :root {
-            --bg:      #faf7f2;
-            --text:    #1a1814;
-            --muted:   #6b6055;
-            --link:    #7c3a1e;
-            --hover:   #c4956a;
-            --border:  #e0d5c5;
-            --accent:  #c4956a;
+            --bg:      #0d1117;
+            --text:    #e6edf3;
+            --muted:   #7d8590;
+            --accent:  #64ffda;
+            --border:  rgba(48, 54, 61, 0.9);
+            --card-bg: rgba(22, 27, 34, 0.75);
         }
 
-        html { font-size: 18px; scroll-behavior: smooth; }
+        html { font-size: 16px; scroll-behavior: smooth; }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'EB Garamond', Georgia, serif;
-            line-height: 1.8;
-            padding: 2.5rem 1.25rem 4rem;
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.75;
+            padding-top: 3.5rem;
         }
 
-        .wrap { max-width: 680px; margin: 0 auto; }
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
 
         a {
-            color: var(--link);
-            text-decoration: underline;
-            text-decoration-color: var(--accent);
-            text-underline-offset: 3px;
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+        a:hover { opacity: 0.75; }
+
+        /* ── Sticky Header ── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(13, 17, 23, 0.88);
+            border-bottom: 1px solid rgba(48, 54, 61, 0.9);
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .site-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--accent);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .site-title::before { content: '> '; }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.1rem 1.25rem;
+            margin-left: auto;
+        }
+        nav a {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
             transition: color 0.15s;
         }
-        a:hover { color: var(--hover); }
-
-        /* ── Header / Nav ── */
-        header {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
-        .site-title a { color: var(--text); text-decoration: none; }
-
-        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
-        nav a {
-            color: var(--muted);
-            font-size: 0.92rem;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-        }
-        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
-        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
+        nav a:hover { color: var(--accent); opacity: 1; }
+        nav a.active { color: var(--accent); }
 
         /* ── Page title ── */
         .page-header { margin-bottom: 2.5rem; }
-        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .page-header p { font-size: 0.97rem; color: var(--muted); font-style: italic; }
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+        .page-header p {
+            font-size: 0.92rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ── Section labels ── */
+        section { margin-bottom: 3rem; }
+
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(100, 255, 218, 0.2), transparent);
+        }
 
         /* ── Bio prose ── */
         .bio-prose p {
-            margin-bottom: 1.25rem;
-            font-size: 1rem;
-        }
-
-        .bio-prose p:first-of-type::first-letter {
-            float: left;
-            font-size: 4.2rem;
-            line-height: 0.78;
-            margin: 0.1em 0.07em 0 0;
-            font-weight: 500;
+            margin-bottom: 1.2rem;
+            font-size: 0.97rem;
             color: var(--text);
         }
 
@@ -95,36 +144,35 @@
             color: var(--muted);
         }
 
-        /* ── Ornamental divider ── */
-        .ornament {
-            text-align: center;
-            color: var(--accent);
-            font-size: 1rem;
-            letter-spacing: 0.6em;
-            margin: 2.75rem 0;
-            user-select: none;
-        }
-
-        /* ── Section headings ── */
-        h2 {
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            margin-bottom: 1.25rem;
-        }
-
         /* ── Skills grid ── */
         .skills-grid {
             display: grid;
             grid-template-columns: max-content 1fr;
-            gap: 0.55rem 1.5rem;
-            font-size: 0.97rem;
+            gap: 0.65rem 1.75rem;
         }
-        .skill-label { color: var(--muted); font-style: italic; white-space: nowrap; }
+        .skill-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            white-space: nowrap;
+            padding-top: 0.2rem;
+        }
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.5rem;
+        }
+        .skill-tags span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--accent);
+            background: rgba(100, 255, 218, 0.07);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 4px;
+            padding: 0.1rem 0.45rem;
+        }
 
-        /* ── Certificates ── */
+        /* ── Certificates list ── */
         .item-list { list-style: none; }
         .item-list li {
             border-bottom: 1px solid var(--border);
@@ -132,29 +180,22 @@
         }
         .item-list li:first-child { border-top: 1px solid var(--border); }
 
-        .cert-name { font-weight: 500; margin-bottom: 0.15rem; }
-        .cert-meta { font-size: 0.82rem; color: var(--muted); font-style: italic; }
-
-        /* ── Justified prose ── */
-        .bio-prose p {
-            text-align: justify;
-            hyphens: auto;
-            text-align-last: left;
+        .cert-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            color: var(--text);
         }
-
-        /* ── External link arrows ── */
-        a[target="_blank"]::after {
-            content: ' ↗';
-            font-size: 0.72em;
-            vertical-align: 0.12em;
-            opacity: 0.55;
-            text-decoration: none;
-            display: inline;
+        .cert-name a {
+            color: var(--text);
         }
-        nav a::after,
-        .social-row a::after,
-        footer a::after,
-        .back-link::after { content: none; }
+        .cert-name a:hover { color: var(--accent); opacity: 1; }
+
+        .cert-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
 
         /* ── Social links ── */
         .social-row {
@@ -164,27 +205,32 @@
             gap: 0.3rem 1.25rem;
         }
         .social-row a {
-            font-size: 0.88rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
             color: var(--muted);
             text-decoration: none;
             border-bottom: 1px solid var(--border);
+            padding-bottom: 0.1rem;
         }
-        .social-row a:hover { color: var(--link); border-color: var(--accent); }
+        .social-row a:hover { color: var(--accent); opacity: 1; border-color: var(--accent); }
 
-        /* ── Back link ── */
-        .back-link {
-            display: inline-block;
-            margin-top: 2.5rem;
-            font-size: 0.92rem;
-            font-style: italic;
+        /* ── External link arrows ── */
+        a[target="_blank"]::after {
+            content: ' ↗';
+            font-size: 0.68em;
+            opacity: 0.45;
         }
+        nav a::after,
+        .social-row a::after,
+        footer a::after { content: none; }
 
         /* ── Footer ── */
         footer {
             border-top: 1px solid var(--border);
             padding-top: 1.5rem;
             margin-top: 3rem;
-            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
             color: var(--muted);
             display: flex;
             justify-content: space-between;
@@ -192,35 +238,39 @@
             gap: 0.5rem;
         }
         footer a { color: var(--muted); text-decoration: none; }
-        footer a:hover { color: var(--link); }
+        footer a:hover { color: var(--accent); opacity: 1; }
 
-        @media (max-width: 520px) {
+        @media (max-width: 540px) {
             .skills-grid {
                 grid-template-columns: 1fr;
-                gap: 0.15rem;
+                gap: 0.2rem;
             }
-            .skill-label { margin-top: 0.6rem; }
+            .skill-label { margin-top: 0.5rem; }
+            .nav-inner { gap: 1rem; }
+            nav { gap: 0.1rem 0.75rem; }
         }
     </style>
 </head>
 
 <body>
-<div class="wrap">
 
-    <!-- Header -->
     <header>
-        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
-        <nav>
-            <a href="index.html#writing">Writing</a>
-            <a href="index.html#projects">Projects</a>
-            <a href="index.html#certificates">Certificates</a>
-            <a href="index.html#contact">Contact</a>
-            <a href="bio.html" class="active">Bio</a>
-            <a href="notebook.html">Notebook</a>
-            <a href="now.html">Now</a>
-            <a href="uses.html">Uses</a>
-        </nav>
+        <div class="nav-inner">
+            <span class="site-title">mapalo.dev</span>
+            <nav>
+                <a href="index.html#writing">Writing</a>
+                <a href="index.html#projects">Projects</a>
+                <a href="index.html#skills">Skills</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="bio.html" class="active">Bio</a>
+                <a href="notebook.html">Notebook</a>
+                <a href="now.html">Now</a>
+                <a href="uses.html">Uses</a>
+            </nav>
+        </div>
     </header>
+
+<div class="wrap">
 
     <!-- Page title -->
     <div class="page-header">
@@ -271,30 +321,40 @@
         </div>
     </div>
 
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-
     <!-- Skills -->
     <section id="skills">
         <h2>Skills &amp; Technologies</h2>
         <div class="skills-grid">
             <span class="skill-label">Languages</span>
-            <span>TypeScript, JavaScript, Python, Java, C++, MQL5, PHP</span>
+            <div class="skill-tags">
+                <span>TypeScript</span><span>JavaScript</span><span>Python</span><span>Java</span><span>C++</span><span>MQL5</span><span>PHP</span>
+            </div>
             <span class="skill-label">Mobile</span>
-            <span>React Native, Expo, SwiftUI</span>
+            <div class="skill-tags">
+                <span>React Native</span><span>Expo</span><span>SwiftUI</span>
+            </div>
             <span class="skill-label">Web</span>
-            <span>React, Vite, Node.js, Express</span>
+            <div class="skill-tags">
+                <span>React</span><span>Vite</span><span>Node.js</span><span>Express</span>
+            </div>
             <span class="skill-label">Data</span>
-            <span>Supabase, PostgreSQL, Firebase, MySQL</span>
+            <div class="skill-tags">
+                <span>Supabase</span><span>PostgreSQL</span><span>Firebase</span><span>MySQL</span>
+            </div>
             <span class="skill-label">IoT</span>
-            <span>ESP32, LoRaWAN, ChirpStack, MQTT, Serial</span>
+            <div class="skill-tags">
+                <span>ESP32</span><span>LoRaWAN</span><span>ChirpStack</span><span>MQTT</span><span>Serial</span>
+            </div>
             <span class="skill-label">DevOps</span>
-            <span>Docker, Kubernetes, GitHub Actions, CI/CD</span>
+            <div class="skill-tags">
+                <span>Docker</span><span>Kubernetes</span><span>GitHub Actions</span><span>CI/CD</span>
+            </div>
             <span class="skill-label">Tools</span>
-            <span>Git, Xcode, Postman, Tkinter</span>
+            <div class="skill-tags">
+                <span>Git</span><span>Xcode</span><span>Postman</span><span>Tkinter</span>
+            </div>
         </div>
     </section>
-
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
     <!-- Certificates -->
     <section id="certificates">
@@ -320,8 +380,6 @@
             </li>
         </ul>
     </section>
-
-    <a class="back-link" href="index.html">&larr; Back to home</a>
 
     <!-- Footer -->
     <footer>
