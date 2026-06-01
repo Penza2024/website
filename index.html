@@ -104,34 +104,16 @@
             gap: 2.5rem;
         }
 
-        /* ── 3D floating head ── */
-        .hero-photo-wrap {
+        /* ── 3D element ── */
+        .hero-3d {
             flex-shrink: 0;
-            width: 160px;
-            height: 160px;
-            position: relative;
+            width: 180px;
+            height: 180px;
             cursor: grab;
             animation: enter-right 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
         }
-
-        /* No border-radius, no overflow, no border on the canvas —
-           nothing that can interfere with WebGL compositing */
-        .hero-photo-wrap canvas {
+        .hero-3d canvas {
             display: block;
-            width: 160px !important;
-            height: 160px !important;
-        }
-
-        /* Fallback shown until Three.js is ready */
-        .head-fallback {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 0 5px rgba(100,255,218,0.08),
-                        0 0 28px rgba(100,255,218,0.25);
         }
 
         .hero-text { flex: 1; min-width: 0; }
@@ -480,9 +462,7 @@
     <!-- Hero -->
     <section id="hero">
         <div class="hero-inner">
-            <div id="head-wrap" class="hero-photo-wrap">
-                <img class="head-fallback" src="images/profilePicture.jpeg" alt="Mapalo Musonda">
-            </div>
+            <div id="head-wrap" class="hero-3d"></div>
             <div class="hero-text">
                 <h1 class="hero-name">Mapalo Musonda</h1>
                 <p class="hero-role"><span class="typed"></span><span class="cursor"></span></p>
@@ -836,96 +816,73 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── Three.js 3D floating head ──────────────────────────────────────────────
+// ── Three.js 3D shape (no image loading — pure geometry) ──────────────────
 (function() {
-    const SIZE = 160;
+    const SIZE = 180;
     const wrap = document.getElementById('head-wrap');
     if (!wrap || typeof THREE === 'undefined') return;
 
-    const imgEl = wrap.querySelector('.head-fallback');
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(SIZE, SIZE);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0, 0);
+    wrap.appendChild(renderer.domElement);
 
-    function buildScene() {
-        // ① Draw photo onto an offscreen canvas — avoids every CORS /
-        //   element-visibility / texture-invalidation issue
-        const oc = document.createElement('canvas');
-        oc.width = oc.height = 512;
-        oc.getContext('2d').drawImage(imgEl, 0, 0, 512, 512);
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.z = 3.2;
 
-        // ② Hide fallback, inject Three.js canvas
-        imgEl.style.display = 'none';
+    // Torus knot — no image/texture, always works
+    const knot = new THREE.Mesh(
+        new THREE.TorusKnotGeometry(0.72, 0.26, 160, 32),
+        new THREE.MeshStandardMaterial({
+            color:     0x64ffda,
+            emissive:  0x0d3030,
+            roughness: 0.18,
+            metalness: 0.9,
+        })
+    );
+    scene.add(knot);
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(SIZE, SIZE);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000, 0);
-        wrap.appendChild(renderer.domElement);
+    // Outer wireframe for extra depth
+    const wire = new THREE.Mesh(
+        new THREE.TorusKnotGeometry(0.72, 0.26, 80, 16),
+        new THREE.MeshBasicMaterial({ color: 0x64ffda, wireframe: true, transparent: true, opacity: 0.08 })
+    );
+    scene.add(wire);
 
-        const scene  = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-        camera.position.z = 3.6;
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 1.6);
+    key.position.set(3, 4, 5);
+    scene.add(key);
+    const rimA = new THREE.PointLight(0x64ffda, 5, 9);
+    rimA.position.set(-3, 1, -2);
+    scene.add(rimA);
+    const rimB = new THREE.PointLight(0x64ffda, 2, 6);
+    rimB.position.set(2, -2, 2);
+    scene.add(rimB);
 
-        // ③ CanvasTexture — pixel data already in RAM, zero network calls
-        const tex = new THREE.CanvasTexture(oc);
-        try { tex.colorSpace = THREE.SRGBColorSpace; } catch(e) {}
+    // Mouse steer
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', e => {
+        mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+        my = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
 
-        // Face sphere
-        const sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 64, 64),
-            new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6, metalness: 0.04 })
-        );
-        scene.add(sphere);
-
-        // Teal glow ring — slightly larger back-face sphere
-        const glow = new THREE.Mesh(
-            new THREE.SphereGeometry(1.12, 32, 32),
-            new THREE.MeshStandardMaterial({
-                color: 0x64ffda, emissive: 0x64ffda, emissiveIntensity: 0.6,
-                transparent: true, opacity: 0.08, side: THREE.BackSide,
-            })
-        );
-        scene.add(glow);
-
-        // ④ Lighting
-        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-        const key = new THREE.DirectionalLight(0xffffff, 1.4);
-        key.position.set(2, 3, 4);
-        scene.add(key);
-        const rim = new THREE.PointLight(0x64ffda, 4.5, 8);
-        rim.position.set(-2.5, 0.5, -1.5);
-        scene.add(rim);
-        const fill = new THREE.PointLight(0x64ffda, 0.8, 6);
-        fill.position.set(0, -2.5, 2);
-        scene.add(fill);
-
-        // ⑤ Mouse influence
-        let mx = 0, my = 0;
-        document.addEventListener('mousemove', e => {
-            mx = (e.clientX / window.innerWidth  - 0.5) * 2;
-            my = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        // ⑥ Animate
-        let t = 0, autoRot = 0;
-        (function tick() {
-            requestAnimationFrame(tick);
-            t += 0.008; autoRot += 0.003;
-            sphere.position.y = glow.position.y = Math.sin(t) * 0.08;
-            const tY = autoRot + mx * 0.55;
-            sphere.rotation.y += (tY      - sphere.rotation.y) * 0.04;
-            sphere.rotation.x += (my * -0.3 - sphere.rotation.x) * 0.04;
-            glow.rotation.y = sphere.rotation.y;
-            glow.rotation.x = sphere.rotation.x;
-            renderer.render(scene, camera);
-        })();
-    }
-
-    // Wait for the fallback img to fully decode before drawing it to canvas
-    if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
-        buildScene();
-    } else if (imgEl) {
-        imgEl.onload  = buildScene;
-        imgEl.onerror = function() { /* leave fallback visible */ };
-    }
+    let t = 0;
+    (function tick() {
+        requestAnimationFrame(tick);
+        t += 0.01;
+        // Base rotation + mouse steer
+        knot.rotation.x += 0.004 + my * 0.003;
+        knot.rotation.y += 0.007 + mx * 0.003;
+        wire.rotation.x  = knot.rotation.x;
+        wire.rotation.y  = knot.rotation.y;
+        // Float
+        knot.position.y = wire.position.y = Math.sin(t) * 0.1;
+        renderer.render(scene, camera);
+    })();
 })();
 
 // ── Contact form ───────────────────────────────────────────────────────────
