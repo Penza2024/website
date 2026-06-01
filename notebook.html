@@ -5,197 +5,250 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notebook | Mapalo Musonda</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg:      #faf7f2;
+            --text:    #1a1814;
+            --muted:   #6b6055;
+            --link:    #7c3a1e;
+            --hover:   #c4956a;
+            --border:  #e0d5c5;
+            --accent:  #c4956a;
+        }
+
+        html { font-size: 18px; scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', sans-serif;
-            padding-top: 64px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'EB Garamond', Georgia, serif;
+            line-height: 1.8;
+            padding: 2.5rem 1.25rem 4rem;
         }
 
-        .content-wrapper {
-            max-width: 720px;
-            margin: 0 auto;
+        .wrap { max-width: 680px; margin: 0 auto; }
+
+        a {
+            color: var(--link);
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+        }
+        a:hover { color: var(--hover); }
+
+        /* ── Header / Nav ── */
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
         }
 
-        .article-card {
-            transition: all 0.3s;
+        .site-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+        .site-title a { color: var(--text); text-decoration: none; }
+
+        nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; }
+        nav a {
+            color: var(--muted);
+            font-size: 0.92rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+        nav a:hover { color: var(--link); border-bottom-color: var(--accent); }
+        nav a.active { color: var(--text); border-bottom: 1px solid var(--border); }
+
+        /* ── Page title ── */
+        .page-header { margin-bottom: 2.5rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .page-header p { font-size: 0.97rem; color: var(--muted); font-style: italic; }
+
+        /* ── Article list ── */
+        .article-list { list-style: none; }
+
+        .article-list li {
+            border-bottom: 1px solid var(--border);
+            padding: 1.4rem 0;
+        }
+        .article-list li:first-child { border-top: 1px solid var(--border); }
+
+        .article-meta {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 0.3rem;
         }
 
-        .article-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .article-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
         }
+
+        .article-title a { color: var(--text); text-decoration: none; }
+        .article-title a:hover { color: var(--link); text-decoration: underline; text-decoration-color: var(--accent); }
+
+        .article-excerpt {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.75rem;
+        }
+
+        .article-tags span {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-family: 'Courier New', monospace;
+        }
+
+        .article-tags span::before { content: '#'; }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-block;
+            margin-top: 2.5rem;
+            font-size: 0.92rem;
+            font-style: italic;
+        }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--link); }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body>
+<div class="wrap">
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md z-50 shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="home.html" class="font-['Pacifico'] text-2xl text-primary">mapalo</a>
-            <nav class="hidden md:flex items-center space-x-6">
-                <a href="notebook.html" class="text-primary font-semibold transition-colors duration-200">Notebook</a>
-                <a href="projects.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Projects</a>
-                <a href="bio.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Bio</a>
-                <a href="uses.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Uses</a>
-                <a href="bookmarks.html" class="text-gray-700 hover:text-primary transition-colors duration-200 font-medium">Bookmarks</a>
-            </nav>
-        </div>
+    <header>
+        <div class="site-title"><a href="index.html">Mapalo Musonda</a></div>
+        <nav>
+            <a href="index.html#writing">Writing</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#skills">Skills</a>
+            <a href="index.html#certificates">Certificates</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="bio.html">Bio</a>
+            <a href="notebook.html" class="active">Notebook</a>
+        </nav>
     </header>
 
-    <!-- Notebook Section -->
-    <section class="py-20 bg-white min-h-screen">
-        <div class="container mx-auto px-4">
-            <div class="content-wrapper">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Notebook</h1>
-                <p class="text-gray-600 mb-12">Thoughts on code, design, and building things that matter. Typos included.</p>
+    <!-- Page title -->
+    <div class="page-header">
+        <h1>Notebook</h1>
+        <p>Thoughts on code, design, and building things that matter. Typos included.</p>
+    </div>
 
-                <!-- Articles Grid -->
-                <div class="space-y-8">
-                    <!-- Article 1 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>May 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>5 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">React Native vs SwiftUI: A Developer's Perspective</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            After building apps in both frameworks, here's what I've learned about choosing the right tool for cross-platform development.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">React Native</span>
-                            <span class="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full">SwiftUI</span>
-                            <span class="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Mobile Dev</span>
-                        </div>
-                    </article>
-
-                    <!-- Article 2 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>April 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>7 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">Supabase: The Backend I Wish I Had Years Ago</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            How Supabase changed the way I think about backend development and why it's become my go-to for new projects.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">Supabase</span>
-                            <span class="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">Backend</span>
-                            <span class="text-xs px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full">Database</span>
-                        </div>
-                    </article>
-
-                    <!-- Article 3 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>March 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>6 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">AI Translation Tools and the Future of Tourism</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            Exploring how artificial intelligence can break down language barriers and transform the travel experience.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full">AI</span>
-                            <span class="text-xs px-3 py-1 bg-pink-100 text-pink-700 rounded-full">Research</span>
-                            <span class="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">Tourism</span>
-                        </div>
-                    </article>
-
-                    <!-- Article 4 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>February 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>4 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">The Joy of Side Projects</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            Why building things for fun is the best way to learn, grow, and stay passionate about development.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Learning</span>
-                            <span class="text-xs px-3 py-1 bg-teal-100 text-teal-700 rounded-full">Career</span>
-                        </div>
-                    </article>
-
-                    <!-- Article 5 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>January 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>8 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">Building for Performance: Why Speed Still Matters</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            In an age of powerful devices and fast internet, why do we still need to care about performance? Let's dive in.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-red-100 text-red-700 rounded-full">Performance</span>
-                            <span class="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">Web Dev</span>
-                            <span class="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">Best Practices</span>
-                        </div>
-                    </article>
-
-                    <!-- Article 6 -->
-                    <article class="article-card bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="flex items-center text-sm text-gray-500 mb-3">
-                            <span>December 2025</span>
-                            <span class="mx-2">•</span>
-                            <span>5 min read</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">
-                            <a href="#" class="hover:text-primary transition-colors">Why I Built My Own Trading Bot</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">
-                            Algorithmic trading taught me more about discipline, testing, and risk management than any course ever could.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full">Trading</span>
-                            <span class="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full">MQL5</span>
-                            <span class="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">Automation</span>
-                        </div>
-                    </article>
-                </div>
-
-                <!-- Back to Home -->
-                <div class="text-center mt-12">
-                    <a href="home.html"
-                        class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
-                        <i class="ri-arrow-left-line ri-lg mr-2"></i>
-                        Back to Home
-                    </a>
-                </div>
+    <!-- Articles -->
+    <ul class="article-list">
+        <li>
+            <div class="article-meta">May 2026 &nbsp;·&nbsp; 5 min read</div>
+            <div class="article-title"><a href="#">React Native vs SwiftUI: A Developer's Perspective</a></div>
+            <div class="article-excerpt">After building apps in both frameworks, here's what I've learned
+            about choosing the right tool for cross-platform development.</div>
+            <div class="article-tags">
+                <span>react-native</span>
+                <span>swiftui</span>
+                <span>mobile</span>
             </div>
-        </div>
-    </section>
+        </li>
+        <li>
+            <div class="article-meta">April 2026 &nbsp;·&nbsp; 7 min read</div>
+            <div class="article-title"><a href="#">Supabase: The Backend I Wish I Had Years Ago</a></div>
+            <div class="article-excerpt">How Supabase changed the way I think about backend development
+            and why it's become my go-to for new projects.</div>
+            <div class="article-tags">
+                <span>supabase</span>
+                <span>backend</span>
+                <span>database</span>
+            </div>
+        </li>
+        <li>
+            <div class="article-meta">March 2026 &nbsp;·&nbsp; 6 min read</div>
+            <div class="article-title"><a href="#">AI Translation Tools and the Future of Tourism</a></div>
+            <div class="article-excerpt">Exploring how artificial intelligence can break down language
+            barriers and transform the travel experience in Zambia and beyond.</div>
+            <div class="article-tags">
+                <span>ai</span>
+                <span>research</span>
+                <span>tourism</span>
+            </div>
+        </li>
+        <li>
+            <div class="article-meta">February 2026 &nbsp;·&nbsp; 4 min read</div>
+            <div class="article-title"><a href="#">The Joy of Side Projects</a></div>
+            <div class="article-excerpt">Why building things for fun is the best way to learn, grow,
+            and stay passionate about development.</div>
+            <div class="article-tags">
+                <span>learning</span>
+                <span>career</span>
+            </div>
+        </li>
+        <li>
+            <div class="article-meta">January 2026 &nbsp;·&nbsp; 8 min read</div>
+            <div class="article-title"><a href="#">Building for Performance: Why Speed Still Matters</a></div>
+            <div class="article-excerpt">In an age of powerful devices and fast internet, why do we
+            still need to care about performance? Let's dive in.</div>
+            <div class="article-tags">
+                <span>performance</span>
+                <span>web-dev</span>
+                <span>best-practices</span>
+            </div>
+        </li>
+        <li>
+            <div class="article-meta">December 2025 &nbsp;·&nbsp; 5 min read</div>
+            <div class="article-title"><a href="#">Why I Built My Own Trading Bot</a></div>
+            <div class="article-excerpt">Algorithmic trading taught me more about discipline, testing,
+            and risk management than any course ever could.</div>
+            <div class="article-tags">
+                <span>trading</span>
+                <span>mql5</span>
+                <span>automation</span>
+            </div>
+        </li>
+    </ul>
+
+    <a class="back-link" href="index.html">&larr; Back to home</a>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-400">&copy; 2025 Mapalo Musonda</p>
-        </div>
+    <footer>
+        <span>© 2025 Mapalo Musonda · Lusaka, Zambia</span>
+        <span>
+            <a href="https://github.com/Penza2024" target="_blank">GitHub</a> ·
+            <a href="https://www.linkedin.com/in/mapalo-musonda-731815226" target="_blank">LinkedIn</a> ·
+            <a href="https://dev.to/mapalo_musonda_ad42ad37a8" target="_blank">Dev.to</a>
+        </span>
     </footer>
 
+</div>
 </body>
-
 </html>
