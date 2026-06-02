@@ -245,9 +245,24 @@
                 <span class="uses-tag">hardware</span>
             </li>
             <li>
-                <div class="uses-name">ESP32-WROOM-32 (38-pin)</div>
-                <div class="uses-desc">Microcontroller of choice for IoT projects — Smart Grid System and Predictive Maintenance Node. Firmware flashed via CP210x USB serial driver.</div>
+                <div class="uses-name">Heltec WiFi LoRa 32 V4</div>
+                <div class="uses-desc">Primary board for the Smart Grid System. Integrates an SX1262 LoRa radio, SSD1306 OLED, and dual-core ESP32-S3 on a single PCB. Programmed via PlatformIO with FreeRTOS multi-tasking.</div>
                 <span class="uses-tag">hardware</span>
+            </li>
+            <li>
+                <div class="uses-name">ESP32-WROOM-32 (38-pin)</div>
+                <div class="uses-desc">General-purpose microcontroller for IoT prototyping — Predictive Maintenance Node and earlier firmware work. Firmware flashed via CP210x USB serial driver.</div>
+                <span class="uses-tag">hardware</span>
+            </li>
+            <li>
+                <div class="uses-name">PZEM-004T v3.0</div>
+                <div class="uses-desc">Energy meter module measuring voltage, current, power, frequency, and power factor over UART. Core sensor in the Smart Grid System — connected to the ESP32 on Serial2 (GPIO45/46).</div>
+                <span class="uses-tag">sensors</span>
+            </li>
+            <li>
+                <div class="uses-name">Heltec L76K GPS Module</div>
+                <div class="uses-desc">Multi-constellation GNSS receiver (GPS + GLONASS + Galileo + BeiDou) via the SH1.25-8Pin connector on the Heltec V4. Parsed with TinyGPSPlus; falls back to a hardcoded campus position before satellite fix.</div>
+                <span class="uses-tag">sensors</span>
             </li>
             <li>
                 <div class="uses-name">EBYTE E220 LoRa Module</div>
