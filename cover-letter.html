@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter – Mapalo Musonda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4; margin: 0; }
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      background: #111827;
+      padding: 28px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .top-name { font-size: 22px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+    .top-role { font-size: 9px; color: #f5c518; letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
+
+    .top-contact p { font-size: 11px; color: #a8b8d0; line-height: 1.85; text-align: right; }
+    .top-contact a { color: #f5c518; text-decoration: none; font-weight: 500; }
+
+    .accent-bar { height: 4px; background: #f5c518; }
+
+    .body { padding: 44px 50px; flex: 1; }
+
+    .date { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+    .recipient { font-size: 12.5px; color: #222; line-height: 1.8; margin-bottom: 24px; }
+
+    .subject-line {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .subject-bar { width: 4px; height: 32px; background: #f5c518; border-radius: 2px; flex-shrink: 0; }
+    .subject-text { font-size: 13.5px; font-weight: 700; color: #111827; }
+
+    p { font-size: 13px; line-height: 1.9; color: #333; margin-bottom: 16px; }
+
+    .highlight { color: #111827; font-weight: 600; }
+
+    .tech-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+    .tech-pill {
+      font-size: 10.5px; font-weight: 600;
+      background: #fdf8e6;
+      border: 1px solid rgba(200,162,0,0.5);
+      color: #111827; padding: 3px 10px; border-radius: 3px;
+    }
+
+    .closing { margin-top: 32px; }
+    .sig-name { font-size: 18px; font-weight: 700; color: #111827; margin-top: 28px; }
+    .sig-role { font-size: 10px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div>
+      <div class="top-name">Mapalo Musonda</div>
+      <div class="top-role">Full Stack Developer</div>
+    </div>
+    <div class="top-contact">
+      <p>mapalomusondapenza@gmail.com</p>
+      <p>0973895924</p>
+      <p>github.com/Penza2024 · Lusaka, Zambia</p>
+      <p><a href="https://website-alpha-hazel-69.vercel.app">website-alpha-hazel-69.vercel.app</a></p>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="body">
+
+    <div class="date">June 2, 2026</div>
+
+    <div class="recipient">
+      <strong>Hiring Team</strong><br>
+      Open Ownership<br>
+      fredah@openownership.org
+    </div>
+
+    <div class="subject-line">
+      <div class="subject-bar"></div>
+      <div class="subject-text">Application — Full Stack Developer</div>
+    </div>
+
+    <p>Dear Hiring Team,</p>
+
+    <p>
+      I am applying for the Full Stack Developer role at Open Ownership. Your description —
+      "a team building reliable, modern software" — is exactly the kind of environment I want
+      to work in, and the tech stack you use is one I have been building with for the past two years.
+    </p>
+
+    <p>
+      I am a final-year Computer Science student at Mulungushi University, graduating in August 2026.
+      Over the course of my degree I have not waited for the classroom — I have built and shipped real systems.
+      My final year project was a <span class="highlight">real-time smart grid monitoring platform for ZESCO</span>,
+      Zambia's national electricity utility: ESP32 sensor nodes transmitting electricity data over LoRaWAN
+      into a Supabase/PostgreSQL backend, surfaced across two React dashboards for operators and consumers.
+      Building that end-to-end — from firmware to cloud to UI — taught me more about production software
+      than anything else I have done.
+    </p>
+
+    <p>
+      Beyond that, I have built <span class="highlight">Reservit</span>, a mobile event management
+      and ticketing platform in React Native with Airtel Money payment integration and QR code ticketing;
+      <span class="highlight">BusTicKTeT</span>, a multi-company bus booking app with admin compliance dashboards;
+      and two professional client projects under NDA — one a full-stack enterprise platform, the other
+      a logistics web app with containerised deployment and a CI/CD pipeline.
+      The technologies your team works with match mine closely:
+    </p>
+
+    <div class="tech-row">
+      <span class="tech-pill">React</span>
+      <span class="tech-pill">TypeScript</span>
+      <span class="tech-pill">Node.js</span>
+      <span class="tech-pill">Docker</span>
+      <span class="tech-pill">Git / GitHub Actions</span>
+      <span class="tech-pill">Supabase / PostgreSQL</span>
+      <span class="tech-pill">CI/CD</span>
+    </div>
+
+    <p>
+      I also use AI tools — <span class="highlight">Claude, ChatGPT, and Cursor</span> — as a core part
+      of how I develop, not to replace judgement but to move faster and write better code.
+      I have contributed to open source (RuView, a WiFi sensing platform; Zuluru3, a Docker deployment)
+      and had research on AI-powered language translation accepted by ZICTA in 2025.
+    </p>
+
+    <p>
+      Golang is not currently in my daily stack, but I learn languages fast — I have shipped in
+      TypeScript, JavaScript, Python, C++, PHP, MQL5, and Java. Go's philosophy around simplicity
+      resonates with how I already think about backend design, and I am prepared to ramp up quickly.
+    </p>
+
+    <p>
+      What draws me to Open Ownership specifically is the emphasis on product thinking alongside
+      engineering. I want to understand what I am building and why, not just implement tickets.
+      I believe I can contribute meaningfully from day one and grow fast within your team.
+    </p>
+
+    <p>
+      You can see my projects, writing, and background in full at my portfolio:
+      <strong>website-alpha-hazel-69.vercel.app</strong> — it gives a clearer picture
+      of who I am and how I work than a CV alone can.
+    </p>
+
+    <p>Thank you for your time. I would love the opportunity to talk.</p>
+
+    <div class="closing">
+      <p>Sincerely,</p>
+      <div class="sig-name">Mapalo Musonda</div>
+      <div class="sig-role">Full Stack Developer</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

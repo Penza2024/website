@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV – Mapalo Musonda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4; margin: 0; }
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 66mm 1fr;
+      font-size: 12px;
+      color: #222;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: #111827;
+      color: #c9d6e8;
+      padding: 36px 22px;
+      min-height: 297mm;
+    }
+
+    .s-avatar {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: #f5c518; margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: #111827;
+    }
+
+    .s-name { font-size: 15px; font-weight: 700; color: white; text-align: center; line-height: 1.3; margin-bottom: 3px; }
+    .s-role { font-size: 8.5px; color: #f5c518; text-align: center; letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 26px; }
+
+    .s-sec { margin-bottom: 20px; }
+
+    .s-head {
+      font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: #f5c518; border-bottom: 1px solid rgba(245,197,24,0.2);
+      padding-bottom: 4px; margin-bottom: 8px;
+    }
+
+    .s-line { font-size: 10.5px; color: #a8b8d0; line-height: 1.85; display: block; }
+    .s-line a { color: #a8b8d0; text-decoration: none; }
+
+    .bar-wrap { margin-bottom: 7px; }
+    .bar-label { font-size: 10px; color: #c0cfe0; margin-bottom: 3px; }
+    .bar-track { height: 2.5px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .bar-fill  { height: 100%; background: #f5c518; border-radius: 2px; }
+
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 4px; }
+    .s-tag {
+      font-size: 9px; font-weight: 500;
+      background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.22);
+      color: #ddc87a; padding: 2px 7px; border-radius: 2px;
+    }
+
+    .cert-item { margin-bottom: 8px; }
+    .cert-name { font-size: 9.5px; color: #c0cfe0; line-height: 1.5; }
+    .cert-meta { font-size: 8.5px; color: #7a8fa8; }
+
+    /* ── MAIN ── */
+    .main { padding: 36px 30px 36px 26px; }
+
+    .m-sec { margin-bottom: 18px; }
+
+    .m-head {
+      font-size: 8px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #111827; margin-bottom: 4px;
+    }
+
+    .m-rule { border: none; border-top: 1.5px solid #111827; margin-bottom: 12px; }
+
+    .profile-text { font-size: 11.5px; line-height: 1.8; color: #444; }
+
+    /* Entry */
+    .entry { margin-bottom: 12px; }
+
+    .entry-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1px; }
+    .entry-title { font-size: 12px; font-weight: 700; color: #111827; }
+    .entry-date { font-size: 9.5px; color: #888; white-space: nowrap; margin-left: 8px; }
+    .entry-sub { font-size: 10px; color: #c9a200; font-weight: 600; margin-bottom: 5px; }
+    .entry-desc { font-size: 11px; color: #555; line-height: 1.7; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+    .tag {
+      font-size: 8.5px; font-weight: 600;
+      background: #fdf8e6; border: 1px solid rgba(200,162,0,0.3);
+      color: #111827; padding: 2px 7px; border-radius: 2px;
+    }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+
+    .edu-title { font-size: 12px; font-weight: 700; color: #111827; }
+    .edu-school { font-size: 10.5px; color: #c9a200; font-weight: 600; margin-top: 1px; }
+    .edu-date { font-size: 10px; color: #888; margin-top: 1px; }
+
+    .divider { border: none; border-top: 1px solid #eee; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="s-avatar">MM</div>
+    <div class="s-name">Mapalo Musonda</div>
+    <div class="s-role">Full Stack Developer</div>
+
+    <div class="s-sec">
+      <div class="s-head">Contact</div>
+      <span class="s-line">0973895924</span>
+      <span class="s-line">mapalomusondapenza@gmail.com</span>
+      <span class="s-line">Lusaka, Zambia</span>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-head">Links</div>
+      <span class="s-line"><a href="https://github.com/Penza2024">github.com/Penza2024</a></span>
+      <span class="s-line"><a href="https://linkedin.com/in/mapalo-musonda-731815226">LinkedIn</a></span>
+      <span class="s-line"><a href="https://website-alpha-hazel-69.vercel.app">Portfolio</a></span>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-head">Core Skills</div>
+      <div class="bar-wrap">
+        <div class="bar-label">TypeScript / JavaScript</div>
+        <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">React / React Native</div>
+        <div class="bar-track"><div class="bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Node.js / Express</div>
+        <div class="bar-track"><div class="bar-fill" style="width:82%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Supabase / PostgreSQL</div>
+        <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Docker / CI-CD</div>
+        <div class="bar-track"><div class="bar-fill" style="width:76%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Python / C++ / Java</div>
+        <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+      </div>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-head">Technologies</div>
+      <div class="tag-cloud">
+        <span class="s-tag">React</span>
+        <span class="s-tag">TypeScript</span>
+        <span class="s-tag">React Native</span>
+        <span class="s-tag">Expo</span>
+        <span class="s-tag">Tailwind CSS</span>
+        <span class="s-tag">Node.js</span>
+        <span class="s-tag">Vite</span>
+        <span class="s-tag">Docker</span>
+        <span class="s-tag">Kubernetes</span>
+        <span class="s-tag">GitHub Actions</span>
+        <span class="s-tag">Supabase</span>
+        <span class="s-tag">PostgreSQL</span>
+        <span class="s-tag">Firebase</span>
+        <span class="s-tag">ESP32</span>
+        <span class="s-tag">LoRaWAN</span>
+        <span class="s-tag">MQTT</span>
+        <span class="s-tag">Three.js</span>
+        <span class="s-tag">PHP</span>
+        <span class="s-tag">MQL5</span>
+        <span class="s-tag">Git</span>
+      </div>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-head">AI Tools</div>
+      <div class="tag-cloud">
+        <span class="s-tag">Claude</span>
+        <span class="s-tag">ChatGPT</span>
+        <span class="s-tag">Cursor</span>
+      </div>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-head">Certificates</div>
+      <div class="cert-item">
+        <div class="cert-name">MetaTrader 5 Algorithmic Trading</div>
+        <div class="cert-meta">Coursera · Jan 2024</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-name">Huawei AI and Applications</div>
+        <div class="cert-meta">Huawei Talent Online · 2025</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-name">Kaggle: Intro to Deep Learning</div>
+        <div class="cert-meta">Kaggle · 2024</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-name">Intro to IoT &amp; Digital Transformation</div>
+        <div class="cert-meta">Cisco Networking Academy · May 2026</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="m-sec">
+      <div class="m-head">Profile</div>
+      <hr class="m-rule">
+      <p class="profile-text">
+        Full-stack developer graduating BSc Computer Science in August 2026, with hands-on experience
+        across mobile, web, IoT, and DevOps. I build production systems end-to-end — from React Native
+        apps with live payment integrations to ESP32 sensor networks over LoRaWAN — and have delivered
+        professional client work alongside open source contributions. Strong in TypeScript, React, Docker,
+        and Supabase, with AI tools as a core part of my workflow.
+      </p>
+    </div>
+
+    <div class="m-sec">
+      <div class="m-head">Experience &amp; Projects</div>
+      <hr class="m-rule">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">Smart Grid Monitoring System</div>
+          <div class="entry-date">2025 – 2026</div>
+        </div>
+        <div class="entry-sub">Final Year Project · ZESCO, Zambia's national electricity utility</div>
+        <div class="entry-desc">End-to-end energy monitoring platform: C++ RTOS firmware on Heltec ESP32 nodes (LoRa SX1262, multi-constellation GPS, PZEM-004T meter, OLED, OTA), cloud sync to Supabase, and dual React dashboards for grid operators and consumers.</div>
+        <div class="tags">
+          <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Supabase</span>
+          <span class="tag">C++ / RTOS</span><span class="tag">ESP32</span><span class="tag">LoRaWAN</span><span class="tag">GPS</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">Reservit — Event Management Platform</div>
+          <div class="entry-date">2024 – 2025</div>
+        </div>
+        <div class="entry-sub">Mobile application · React Native / Expo</div>
+        <div class="entry-desc">Event ticketing app with venue dashboards, real-time booking, QR ticket generation, and Airtel Money payment processing secured via Supabase Edge Functions.</div>
+        <div class="tags">
+          <span class="tag">React Native</span><span class="tag">TypeScript</span>
+          <span class="tag">Supabase</span><span class="tag">Airtel Money</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">BusTicKTeT — Bus Ticketing App</div>
+          <div class="entry-date">2024</div>
+        </div>
+        <div class="entry-sub">Mobile application · React Native / Expo</div>
+        <div class="entry-desc">Multi-company bus management with seat booking, trip scheduling, and an admin compliance dashboard with audit logging.</div>
+        <div class="tags">
+          <span class="tag">React Native</span><span class="tag">TypeScript</span><span class="tag">Supabase</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">Company Document Management System</div>
+          <div class="entry-date">2024 – 2025</div>
+        </div>
+        <div class="entry-sub">Full-stack web application · CodeIgniter 4 / PHP</div>
+        <div class="entry-desc">Secure document platform with role-based access control, version control, department hierarchies, and a calendar system. Containerised across development, staging, and production environments with PHPUnit and property-based testing.</div>
+        <div class="tags">
+          <span class="tag">CodeIgniter 4</span><span class="tag">PHP</span><span class="tag">MySQL</span>
+          <span class="tag">Redis</span><span class="tag">Docker</span><span class="tag">PHPUnit</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">Portfolio Website — mapalo.dev</div>
+          <div class="entry-date">2024 – Present</div>
+        </div>
+        <div class="entry-sub">Personal project · Live on Vercel</div>
+        <div class="entry-desc">Responsive portfolio with interactive 3D WebGL rendering (Three.js), particle animation, dark/light theme, and a full blog and publications section. Built with HTML5, Tailwind CSS, and vanilla JavaScript.</div>
+        <div class="tags">
+          <span class="tag">HTML5</span><span class="tag">Tailwind CSS</span>
+          <span class="tag">JavaScript</span><span class="tag">Three.js</span><span class="tag">Vercel</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="entry">
+        <div class="entry-top">
+          <div class="entry-title">Client Work <span style="font-size:9px; font-weight:400; color:#888;">(NDA)</span></div>
+          <div class="entry-date">2024 – 2025</div>
+        </div>
+        <div class="entry-sub">Professional engagements · Zambian software firms</div>
+        <div class="entry-desc">Full-stack enterprise platform and a freight logistics web app with containerised deployment and CI/CD pipeline for two separate Zambian clients.</div>
+        <div class="tags">
+          <span class="tag">Docker</span><span class="tag">CI/CD</span><span class="tag">Full Stack</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-sec">
+      <div class="m-head">Open Source &amp; Research</div>
+      <hr class="m-rule">
+      <div class="two-col">
+        <div class="entry">
+          <div class="entry-title" style="font-size:11px;">RuView — contributor</div>
+          <div class="entry-sub" style="font-size:9.5px;">ESP32 / C++ / Python · WiFi CSI sensing</div>
+          <div class="entry-desc">Firmware and DSP pipeline contributions to a WiFi presence-detection platform using Channel State Information.</div>
+        </div>
+        <div class="entry">
+          <div class="entry-title" style="font-size:11px;">ZICTA Research — 2025</div>
+          <div class="entry-sub" style="font-size:9.5px;">Accepted publication</div>
+          <div class="entry-desc">"AI-Powered Language Translation to Boost Tourism in Zambia" — accepted by ZICTA 2025.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-sec">
+      <div class="m-head">Education</div>
+      <hr class="m-rule">
+      <div class="edu-title">BSc. Computer Science</div>
+      <div class="edu-school">Mulungushi University · Kabwe</div>
+      <div class="edu-date">August 2022 – August 2026 · Graduating August 2026</div>
+    </div>
+
+  </main>
+
+</body>
+</html>
