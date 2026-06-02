@@ -798,7 +798,6 @@
 
 <div id="toast">Message sent!</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="head-data.js"></script>
 <script>
 // ── Canvas particle network ────────────────────────────────────────────────
@@ -918,263 +917,181 @@ document.querySelectorAll('.copy-email').forEach(link => {
     });
 });
 
-// ── JARVIS — Three.js WebGL holographic bust ──────────────────────────────
+// ── JARVIS — Canvas 2D holographic bust, full 4×4 MVP matrix pipeline ────────
 (function initJarvis() {
-    if (typeof THREE === 'undefined' || typeof HEAD_V === 'undefined') {
-        return setTimeout(initJarvis, 80);
-    }
+    if (typeof HEAD_V === 'undefined') return setTimeout(initJarvis, 50);
     const wrap = document.getElementById('head-wrap');
     if (!wrap) return;
     wrap.innerHTML = '';
 
-    // ── HUD ────────────────────────────────────────────────────────────────
+    // ── Canvas ──────────────────────────────────────────────────────────────
+    const cv  = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.style.cssText = 'display:block;width:100%;height:100%;border-radius:10px;' +
+                       'filter:drop-shadow(0 0 22px rgba(100,255,218,0.4));';
+    wrap.appendChild(cv);
+
+    let W = 270, H = 430;
+    function resize() {
+        W = wrap.clientWidth  || 270;
+        H = wrap.clientHeight || 430;
+        cv.width  = W * dpr;
+        cv.height = H * dpr;
+        cv.style.width  = W + 'px';
+        cv.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    new ResizeObserver(resize).observe(wrap);
+
+    // ── HUD ─────────────────────────────────────────────────────────────────
     const hud = document.createElement('div');
     hud.className = 'j-hud';
     hud.innerHTML = `
-      <div class="j-id">SYS-4.1 · ACTIVE</div>
-      <span class="j-c j-tl"></span><span class="j-c j-tr"></span>
-      <span class="j-c j-bl"></span><span class="j-c j-br"></span>
-      <div class="j-name">JARVIS</div>
-      <div class="j-sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
-      <div class="j-bars">
-        <div class="j-bar" style="--w:88%">NEURAL</div>
-        <div class="j-bar" style="--w:94%">COGNITIVE</div>
-        <div class="j-bar" style="--w:76%">AUTONOMY</div>
-      </div>
-      <div class="j-scan-line"></div>
+        <div class="j-id">SYS-4.1 · ACTIVE</div>
+        <span class="j-c j-tl"></span><span class="j-c j-tr"></span>
+        <span class="j-c j-bl"></span><span class="j-c j-br"></span>
+        <div class="j-name">JARVIS</div>
+        <div class="j-sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+        <div class="j-bars">
+            <div class="j-bar" style="--w:88%">NEURAL</div>
+            <div class="j-bar" style="--w:94%">COGNITIVE</div>
+            <div class="j-bar" style="--w:76%">AUTONOMY</div>
+        </div>
+        <div class="j-scan-line"></div>
     `;
 
-    // ── Scene ──────────────────────────────────────────────────────────────
-    const scene    = new THREE.Scene();
-    const getW     = () => wrap.clientWidth  || 270;
-    const getH     = () => wrap.clientHeight || 430;
-    const camera   = new THREE.PerspectiveCamera(40, getW()/getH(), 0.05, 40);
-    camera.position.set(0, 0.1, 2.55);
-    camera.lookAt(0, 0.08, 0);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(getW(), getH());
-    renderer.setClearColor(0x000000, 0);
-    renderer.domElement.style.cssText = 'display:block;border-radius:10px;filter:drop-shadow(0 0 22px rgba(100,255,218,0.35));';
-    wrap.appendChild(renderer.domElement);
     wrap.appendChild(hud);
 
-    // ── Bust group (rotates together) ─────────────────────────────────────
-    const bust = new THREE.Group();
-    scene.add(bust);
-
-    // ── BufferGeometry from HEAD_V / HEAD_F with masculine deformation ─────
-    // Full 4×4 matrix pipeline: model→world handled by THREE, we just build
-    // correct local-space geometry here.
-    const SCALE = 2.55;
-    const nV    = HEAD_V.length;
-    const verts = new Float32Array(nV * 3);
-
-    for (let i = 0; i < nV; i++) {
-        let x = HEAD_V[i][0], y = HEAD_V[i][1], z = HEAD_V[i][2];
-
-        // ── Masculine vertex deformation ──────────────────────────────────
-        // 1. Widen jaw: smooth blend max at y≈-0.05 (chin/jaw region)
-        const jawT = Math.max(0, Math.min(1, 1 - (y + 0.12) / 0.17));
-        x *= 1 + jawT * 0.18;
-        // 2. Square brow ridge: push forward at y≈0.25
-        const browT = Math.max(0, 1 - Math.abs(y - 0.24) * 14);
-        z -= browT * 0.014;
-        // 3. Squarer chin: push verts at bottom slightly downward
-        if (y < -0.04) y -= Math.pow(Math.abs(y + 0.04), 1.5) * 0.12;
-        // 4. Wider overall (masculine proportions)
-        x *= 1.09;
-        // 5. Scale to world units
-        x *= SCALE; y *= SCALE; z *= SCALE;
-
-        verts[i*3] = x; verts[i*3+1] = y; verts[i*3+2] = z;
-    }
-
-    const headGeo = new THREE.BufferGeometry();
-    headGeo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
-
-    const idx = new Uint32Array(HEAD_F.length * 3);
-    for (let i = 0; i < HEAD_F.length; i++) {
-        idx[i*3] = HEAD_F[i][0]; idx[i*3+1] = HEAD_F[i][1]; idx[i*3+2] = HEAD_F[i][2];
-    }
-    headGeo.setIndex(new THREE.BufferAttribute(idx, 1));
-    headGeo.computeVertexNormals();
-
-    // ── Holographic GLSL shader ────────────────────────────────────────────
-    const uTime  = { value: 0 };
-    const holoMat = new THREE.ShaderMaterial({
-        uniforms: { uTime, uColor: { value: new THREE.Color('#64ffda') } },
-        vertexShader: `
-            varying vec3 vN;
-            varying vec3 vW;
-            void main() {
-                vN = normalize(normalMatrix * normal);
-                vW = (modelMatrix * vec4(position,1.0)).xyz;
-                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
-            }
-        `,
-        fragmentShader: `
-            uniform vec3  uColor;
-            uniform float uTime;
-            varying vec3  vN;
-            varying vec3  vW;
-            void main() {
-                vec3  vd      = normalize(cameraPosition - vW);
-                // Fresnel — silhouette glow
-                float rim     = pow(1.0 - abs(dot(vN, vd)), 2.3);
-                // Dim facing fill so interior isn't pitch black
-                float face    = max(dot(vN, vd), 0.0) * 0.10;
-                // Upward-moving scanlines
-                float sl      = smoothstep(0.42, 0.58, fract(vW.y * 48.0 - uTime * 2.8)) * 0.09;
-                // Sparse data-stream vertical strips
-                float ds      = step(0.965, fract(vW.x * 14.0 + uTime * 0.25)) * 0.20;
-                // Horizontal grid
-                float hg      = step(0.97, fract(vW.y * 14.0)) * 0.06;
-                float alpha   = rim * 0.82 + face + sl + ds + hg;
-                gl_FragColor  = vec4(uColor + vec3(ds * 0.1), clamp(alpha, 0.0, 1.0));
-            }
-        `,
-        transparent: true, side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-
-    // Solid holo mesh
-    bust.add(new THREE.Mesh(headGeo, holoMat));
-
-    // Wireframe layer (sparse, extra depth)
-    const wireMat = new THREE.LineBasicMaterial({
-        color: 0x64ffda, transparent: true, opacity: 0.07,
-        blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    bust.add(new THREE.LineSegments(new THREE.WireframeGeometry(headGeo), wireMat));
-
-    // ── Neck ──────────────────────────────────────────────────────────────
-    const neck = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.19, 0.24, 0.46, 20),
-        holoMat
-    );
-    neck.position.y = -0.52;
-    bust.add(neck);
-
-    // ── Shoulders ─────────────────────────────────────────────────────────
-    const shGeo = new THREE.SphereGeometry(0.42, 16, 10, 0, Math.PI*2, 0, Math.PI*0.5);
-    const mkSh = (sx) => {
-        const m = new THREE.Mesh(shGeo, holoMat);
-        m.position.set(sx * 0.64, -0.76, 0);
-        m.rotation.set(Math.PI, 0, sx * 0.28);
+    // ── 4×4 Matrix pipeline (row-major: m[r*4+c]) ───────────────────────────
+    const mul44 = (a, b) => {
+        const m = new Float32Array(16);
+        for (let r = 0; r < 4; r++)
+            for (let c = 0; c < 4; c++)
+                m[r*4+c] = a[r*4]*b[c] + a[r*4+1]*b[4+c] + a[r*4+2]*b[8+c] + a[r*4+3]*b[12+c];
         return m;
     };
-    bust.add(mkSh(-1));
-    bust.add(mkSh(1));
+    // Project vertex (x,y,z,1) through MVP, return [ndcX, ndcY, ndcZ]
+    const mvp4 = (m, x, y, z) => {
+        const xc=m[0]*x+m[1]*y+m[2]*z+m[3], yc=m[4]*x+m[5]*y+m[6]*z+m[7],
+              zc=m[8]*x+m[9]*y+m[10]*z+m[11], w=m[12]*x+m[13]*y+m[14]*z+m[15];
+        return [xc/w, yc/w, zc/w];
+    };
+    const mRY  = a => { const c=Math.cos(a),s=Math.sin(a); return new Float32Array([c,0,s,0, 0,1,0,0,-s,0,c,0, 0,0,0,1]); };
+    const mRX  = a => { const c=Math.cos(a),s=Math.sin(a); return new Float32Array([1,0,0,0, 0,c,-s,0, 0,s,c,0, 0,0,0,1]); };
+    const mT   = (tx,ty,tz) => new Float32Array([1,0,0,tx, 0,1,0,ty, 0,0,1,tz, 0,0,0,1]);
+    const mS   = s  => new Float32Array([s,0,0,0, 0,s,0,0, 0,0,s,0, 0,0,0,1]);
+    const mP   = (fov, asp, n, f) => {
+        const t=1/Math.tan(fov*0.5), d=n-f;
+        return new Float32Array([t/asp,0,0,0, 0,t,0,0, 0,0,(n+f)/d,2*n*f/d, 0,0,-1,0]);
+    };
+    const ndc2s = (nx,ny) => [(nx*0.5+0.5)*W, (0.5-ny*0.5)*H];
 
-    // Chest / collar rim
-    const collar = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.70, 0.66, 0.32, 24, 1, true),
-        holoMat
-    );
-    collar.position.y = -1.02;
-    bust.add(collar);
+    // ── One-time: masculine vertex deformation + face normals ────────────────
+    const nV=HEAD_V.length, nF=HEAD_F.length;
+    const VERTS=new Float32Array(nV*3), FNORM=new Float32Array(nF*3);
 
-    // ── Orbital rings (scene-level, don't tilt with head) ─────────────────
-    const rings = [0.68, 0.80, 0.94].map((r, i) => {
-        const m = new THREE.Mesh(
-            new THREE.RingGeometry(r - 0.005, r + 0.005, 96),
-            new THREE.MeshBasicMaterial({
-                color: 0x64ffda, transparent: true,
-                opacity: 0.20 - i * 0.055,
-                side: THREE.DoubleSide,
-                blending: THREE.AdditiveBlending, depthWrite: false,
-            })
-        );
-        m.rotation.x = Math.PI / 2 + (i - 1) * 0.12;
-        m.rotation.z = i * 0.55;
-        m.position.y = -0.08 + i * 0.06;
-        scene.add(m);
-        return m;
-    });
-
-    // ── Floating particles ─────────────────────────────────────────────────
-    const mobile  = window.innerWidth < 600;
-    const pN      = mobile ? 140 : 260;
-    const pBuf    = new Float32Array(pN * 3);
-    for (let i = 0; i < pN; i++) {
-        const r = 0.8 + Math.random() * 1.2;
-        const θ = Math.random() * Math.PI * 2;
-        const φ = Math.acos(2 * Math.random() - 1);
-        pBuf[i*3]   = r * Math.sin(φ) * Math.cos(θ);
-        pBuf[i*3+1] = r * Math.sin(φ) * Math.sin(θ);
-        pBuf[i*3+2] = r * Math.cos(φ);
+    for (let i=0;i<nV;i++) {
+        let x=HEAD_V[i][0],y=HEAD_V[i][1],z=HEAD_V[i][2];
+        const jt=Math.max(0,Math.min(1,(-y+0.05)*7)); x*=1+jt*0.16;     // widen jaw
+        const bt=Math.max(0,1-Math.abs(y-0.24)*14);   z-=bt*0.013;      // brow ridge
+        if(y<-0.04) y-=Math.pow(Math.abs(y+0.04),1.4)*0.10;             // square chin
+        x*=1.10; y*=1.05;                                                 // wider/taller
+        VERTS[i*3]=x; VERTS[i*3+1]=y; VERTS[i*3+2]=z;
     }
-    const pGeo = new THREE.BufferGeometry();
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pBuf, 3));
-    const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({
-        color: 0x64ffda, size: 0.007, transparent: true, opacity: 0.65,
-        blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
-    scene.add(pts);
+    for (let i=0;i<nF;i++) {
+        const a=HEAD_F[i][0],b=HEAD_F[i][1],c=HEAD_F[i][2];
+        const ax=VERTS[a*3],ay=VERTS[a*3+1],az=VERTS[a*3+2];
+        const ex=VERTS[b*3]-ax,ey=VERTS[b*3+1]-ay,ez=VERTS[b*3+2]-az;
+        const fx=VERTS[c*3]-ax,fy=VERTS[c*3+1]-ay,fz=VERTS[c*3+2]-az;
+        let nx=ey*fz-ez*fy,ny=ez*fx-ex*fz,nz=ex*fy-ey*fx;
+        const l=Math.hypot(nx,ny,nz)||1;
+        FNORM[i*3]=nx/l; FNORM[i*3+1]=ny/l; FNORM[i*3+2]=nz/l;
+    }
 
-    // ── Lights ─────────────────────────────────────────────────────────────
-    scene.add(new THREE.AmbientLight(0x64ffda, 0.22));
-    const key = new THREE.PointLight(0x64ffda, 2.2, 12);
-    key.position.set(1.6, 1.2, 3);
-    scene.add(key);
-    const fill = new THREE.PointLight(0x006688, 1.2, 8);
-    fill.position.set(-1.6, 0.2, 1.2);
-    scene.add(fill);
+    // Pre-allocated working arrays (no GC per frame)
+    const sX=new Float32Array(nV), sY=new Float32Array(nV), sZ=new Float32Array(nV);
+    const fD=new Float32Array(nF);
+    const sI=new Uint32Array(nF); for(let i=0;i<nF;i++) sI[i]=i;
 
-    // ── Mouse / touch interaction ──────────────────────────────────────────
-    let tgY = 0, tgX = 0, crY = 0, crX = 0.04;
-    const onPointer = (nx, ny) => { tgY = (nx - 0.5) * 1.05; tgX = (ny - 0.5) * 0.42; };
-    document.addEventListener('mousemove', e => onPointer(e.clientX/window.innerWidth, e.clientY/window.innerHeight));
-    document.addEventListener('touchmove', e => {
-        onPointer(e.touches[0].clientX/window.innerWidth, e.touches[0].clientY/window.innerHeight);
-    }, { passive: true });
+    // ── Interaction ─────────────────────────────────────────────────────────
+    let tgY=0,tgX=0,crY=0,crX=0.04;
+    const onPtr=(nx,ny)=>{tgY=(nx-.5)*1.1; tgX=(ny-.5)*.4;};
+    document.addEventListener('mousemove',e=>onPtr(e.clientX/innerWidth,e.clientY/innerHeight));
+    document.addEventListener('touchmove',e=>onPtr(e.touches[0].clientX/innerWidth,e.touches[0].clientY/innerHeight),{passive:true});
 
-    // ── Responsive ────────────────────────────────────────────────────────
-    new ResizeObserver(() => {
-        const w = getW(), h = getH();
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-    }).observe(wrap);
+    // ── Render loop ──────────────────────────────────────────────────────────
+    const MS=1.4, CZ=1.05, FOV=0.96; // model scale, camera-Z, ~55° FOV
+    let elapsed=0, prev=performance.now();
 
-    // ── Render loop (delta-time capped to avoid spiral-of-death) ──────────
-    const clock = new THREE.Clock();
-    let   elapsed = 0;
-
-    (function loop() {
+    (function loop(now) {
         requestAnimationFrame(loop);
-        const dt = Math.min(clock.getDelta(), 0.05);
-        elapsed += dt;
+        const dt=Math.min((now-prev)*.001,.05); prev=now; elapsed+=dt;
+        crY+=(tgY-crY)*.04; crX+=(tgX-crX)*.04;
 
-        // Smooth quaternion-style lerp
-        crY += (tgY - crY) * 0.038;
-        crX += (tgX - crX) * 0.038;
+        const fy=Math.sin(elapsed*.72)*.018, ar=elapsed*.22;
 
-        // Bust rotation: slow auto-rotate + mouse steer
-        bust.rotation.y = elapsed * 0.22 + crY;
-        bust.rotation.x = crX * 0.48 + 0.03;
+        // MVP: Model(scale→rotY→rotX→float) × View(cam) × Proj
+        const Mmdl = mul44(mul44(mul44(mS(MS),mRY(ar+crY)),mRX(crX*.5+.04)),mT(0,fy,0));
+        const Mrot = mul44(mRY(ar+crY),mRX(crX*.5+.04)); // normals (no scale/translate)
+        const MVP  = mul44(mP(FOV,W/H,.05,20), mul44(mT(0,-.05,-CZ), Mmdl));
 
-        // Hover float
-        const fy = Math.sin(elapsed * 0.72) * 0.032;
-        bust.position.y = fy;
-        pts.position.y  = fy * 0.25;
+        // Transform vertices → screen
+        for(let i=0;i<nV;i++){
+            const [nx,ny,nz]=mvp4(MVP,VERTS[i*3],VERTS[i*3+1],VERTS[i*3+2]);
+            const [sx,sy]=ndc2s(nx,ny);
+            sX[i]=sx; sY[i]=sy; sZ[i]=nz;
+        }
 
-        // Rings: orbit + breathe
-        rings.forEach((r, i) => {
-            r.rotation.y    = elapsed * (0.35 + i * 0.12);
-            r.position.y    = -0.08 + i * 0.06 + fy;
-            r.material.opacity = (0.20 - i * 0.055) * (0.6 + Math.sin(elapsed * 1.6 + i * 1.1) * 0.4);
-            r.scale.setScalar(1 + Math.sin(elapsed * 0.9 + i) * 0.03);
-        });
+        // Depth sort (painter's algorithm, back→front)
+        for(let i=0;i<nF;i++) fD[i]=(sZ[HEAD_F[i][0]]+sZ[HEAD_F[i][1]]+sZ[HEAD_F[i][2]])/3;
+        sI.sort((a,b)=>fD[b]-fD[a]);
 
-        pts.rotation.y = elapsed * 0.055;
-        pts.rotation.x = Math.sin(elapsed * 0.14) * 0.12;
+        // Lights: key (upper-right-front), fill (lower-left), rim (back)
+        const KX=-.45,KY=.68,KZ=-.57, FX=.55,FY=-.28,FZ=-.78, RX=.10,RY=.20,RZ=.97;
 
-        uTime.value = elapsed;
-        renderer.render(scene, camera);
-    })();
+        ctx.clearRect(0,0,W,H);
+
+        for(let ii=0;ii<nF;ii++){
+            const fi=sI[ii];
+            const a=HEAD_F[fi][0],b=HEAD_F[fi][1],c=HEAD_F[fi][2];
+            const ax=sX[a],ay=sY[a],bx=sX[b],by=sY[b],cx=sX[c],cy=sY[c];
+
+            // Backface cull (CW screen-space = back face)
+            if((bx-ax)*(cy-ay)-(by-ay)*(cx-ax)>0) continue;
+
+            // Rotate face normal
+            const nx=FNORM[fi*3],ny=FNORM[fi*3+1],nz=FNORM[fi*3+2];
+            const rnx=Mrot[0]*nx+Mrot[1]*ny+Mrot[2]*nz;
+            const rny=Mrot[4]*nx+Mrot[5]*ny+Mrot[6]*nz;
+            const rnz=Mrot[8]*nx+Mrot[9]*ny+Mrot[10]*nz;
+
+            // Blinn-Phong shading
+            const dk=Math.max(0,-(rnx*KX+rny*KY+rnz*KZ));
+            const df=Math.max(0,-(rnx*FX+rny*FY+rnz*FZ))*.30;
+            const dr=Math.max(0,-(rnx*RX+rny*RY+rnz*RZ))*.22;
+            // Half-vector specular (view ≈ -Z in view space)
+            const hx=KX,hy=KY,hz=KZ-1, hl=Math.hypot(hx,hy,hz)||1;
+            const sp=Math.pow(Math.max(0,-(rnx*hx/hl+rny*hy/hl+rnz*hz/hl)),24)*.55;
+            const sh=Math.min(.06+dk*.74+df+dr+sp, 1);
+
+            ctx.beginPath();
+            ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.lineTo(cx,cy); ctx.closePath();
+            ctx.fillStyle=`rgba(${~~(3+sh*26+sp*26)},${~~(12+sh*58+sp*72)},${~~(10+sh*50+sp*55)},${(.86+sh*.14).toFixed(2)})`;
+            ctx.fill();
+            ctx.strokeStyle=`rgba(100,255,218,${Math.min(1,.06+dk*.55+sp*.9+dr*.4).toFixed(2)})`;
+            ctx.lineWidth=.4; ctx.stroke();
+        }
+
+        // Travelling scanline
+        const sp2=(elapsed*58)%H;
+        const sg=ctx.createLinearGradient(0,sp2-2,0,sp2+9);
+        sg.addColorStop(0,'rgba(100,255,218,0)'); sg.addColorStop(.4,'rgba(100,255,218,0.08)'); sg.addColorStop(1,'rgba(100,255,218,0)');
+        ctx.fillStyle=sg; ctx.fillRect(0,sp2-2,W,11);
+
+    })(performance.now());
+
 })();
 
 // ── Contact form ───────────────────────────────────────────────────────────
