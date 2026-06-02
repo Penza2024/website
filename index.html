@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -799,6 +798,7 @@
 
 <div id="toast">Message sent!</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="head-data.js"></script>
 <script>
 // ── Canvas particle network ────────────────────────────────────────────────
@@ -1119,7 +1119,9 @@ document.querySelectorAll('.copy-email').forEach(link => {
     const key = new THREE.PointLight(0x64ffda, 2.2, 12);
     key.position.set(1.6, 1.2, 3);
     scene.add(key);
-    scene.add(Object.assign(new THREE.PointLight(0x006688, 1.2, 8), { position: new THREE.Vector3(-1.6, 0.2, 1.2) }));
+    const fill = new THREE.PointLight(0x006688, 1.2, 8);
+    fill.position.set(-1.6, 0.2, 1.2);
+    scene.add(fill);
 
     // ── Mouse / touch interaction ──────────────────────────────────────────
     let tgY = 0, tgX = 0, crY = 0, crX = 0.04;
