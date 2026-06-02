@@ -420,10 +420,29 @@
         }
 
         /* ── Keyframes ── */
-        @keyframes blink    { 50% { opacity: 0; } }
-        @keyframes fade-in  { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes enter-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink       { 50% { opacity: 0; } }
+        @keyframes fade-in     { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes enter-up    { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes enter-right { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes ripple-out  { to { transform: scale(22); opacity: 0; } }
+        @keyframes tag-pop     { 0%,100% { transform: scale(1) rotate(0deg); } 40% { transform: scale(1.18) rotate(-4deg); } 70% { transform: scale(1.1) rotate(3deg); } }
+        @keyframes label-glitch {
+          0%,100% { clip-path: inset(0 0 0 0); }
+          10%      { clip-path: inset(10% 0 80% 0); transform: skewX(-4deg); }
+          30%      { clip-path: inset(60% 0 10% 0); transform: skewX(3deg); }
+          50%      { clip-path: inset(30% 0 40% 0); transform: skewX(-2deg); }
+          70%      { clip-path: inset(0 0 0 0); transform: skewX(0); }
+        }
+
+        /* tag hover pop */
+        .tag { cursor: default; }
+        .tag:hover { animation: tag-pop 0.35s ease forwards; color: #fff; border-color: var(--accent); background: rgba(100,255,218,0.15); }
+
+        /* 3D card — smooth reset */
+        .project-card { transform-style: preserve-3d; will-change: transform; }
+
+        /* magnetic btn transition */
+        .btn { will-change: transform; }
 
         /* ── Mobile ── */
         @media (max-width: 560px) {
@@ -915,6 +934,126 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     this.reset();
     setTimeout(() => { toast.style.display = 'none'; }, 3000);
 });
+</script>
+
+<script>
+// ── Text scramble on section labels ──────────────────────────────────────────
+(function() {
+  const CHARS = '!@#$%^&*<>[]{}|/\\~`abcdef0123456789';
+  function scramble(el) {
+    const original = el.textContent;
+    let frame = 0;
+    const total = 22;
+    (function tick() {
+      const progress = frame / total;
+      const resolved = Math.floor(progress * original.length);
+      let out = '';
+      for (let i = 0; i < original.length; i++) {
+        if (original[i] === ' ' || original[i] === '/') { out += original[i]; continue; }
+        out += i < resolved
+          ? original[i]
+          : CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+      el.textContent = out;
+      frame++;
+      if (frame <= total) requestAnimationFrame(tick);
+      else el.textContent = original;
+    })();
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { scramble(e.target); obs.unobserve(e.target); } });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.section-label').forEach(el => obs.observe(el));
+})();
+
+// ── 3D tilt on project cards ──────────────────────────────────────────────────
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transition = 'transform 0.08s ease';
+    card.style.transform  = `perspective(700px) rotateY(${x * 14}deg) rotateX(${-y * 9}deg) translateY(-5px) scale(1.015)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1), border-color 0.3s, box-shadow 0.3s';
+    card.style.transform  = '';
+  });
+});
+
+// ── Magnetic buttons ──────────────────────────────────────────────────────────
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width  / 2) * 0.3;
+    const y = (e.clientY - r.top  - r.height / 2) * 0.3;
+    btn.style.transition = 'transform 0.1s ease';
+    btn.style.transform  = `translate(${x}px, ${y}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transition = 'transform 0.5s cubic-bezier(0.22,1,0.36,1), background 0.2s, border-color 0.2s, box-shadow 0.2s';
+    btn.style.transform  = '';
+  });
+});
+
+// ── Click ripple ──────────────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  if (e.target.closest('a, button, input, textarea')) return;
+  const d = document.createElement('div');
+  Object.assign(d.style, {
+    position:      'fixed',
+    left:          e.clientX - 10 + 'px',
+    top:           e.clientY - 10 + 'px',
+    width:         '20px',
+    height:        '20px',
+    borderRadius:  '50%',
+    background:    'rgba(100,255,218,0.3)',
+    transform:     'scale(0)',
+    pointerEvents: 'none',
+    zIndex:        '9999',
+    animation:     'ripple-out 0.7s ease-out forwards',
+  });
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 700);
+});
+
+// ── Skill tags stagger in on scroll ──────────────────────────────────────────
+const tagObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.tag').forEach((tag, i) => {
+      tag.style.opacity   = '0';
+      tag.style.transform = 'translateY(10px) scale(0.9)';
+      setTimeout(() => {
+        tag.style.transition = 'opacity 0.35s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1)';
+        tag.style.opacity   = '1';
+        tag.style.transform = '';
+      }, i * 55);
+    });
+    tagObs.unobserve(e.target);
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.skill-row').forEach(r => tagObs.observe(r));
+
+// ── Cert items slide in alternating sides ─────────────────────────────────────
+const certObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const items = e.target.querySelectorAll('.cert-item');
+    items.forEach((item, i) => {
+      const dir = i % 2 === 0 ? '-30px' : '30px';
+      item.style.opacity   = '0';
+      item.style.transform = `translateX(${dir})`;
+      setTimeout(() => {
+        item.style.transition = 'opacity 0.45s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1)';
+        item.style.opacity   = '1';
+        item.style.transform = '';
+      }, i * 80);
+    });
+    certObs.unobserve(e.target);
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('#certificates').forEach(s => certObs.observe(s));
 </script>
 </body>
 </html>
