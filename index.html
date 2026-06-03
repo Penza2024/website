@@ -63,6 +63,7 @@
             background: rgba(13, 17, 23, 0.88);
             border-bottom: 1px solid var(--border);
             animation: fade-in 0.5s ease both;
+            contain: layout style;
         }
 
         .nav-inner {
@@ -289,8 +290,9 @@
         /* ── Project cards ── */
         .project-card {
             background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            contain: layout style;
             border: 1px solid var(--border);
             border-radius: 10px;
             overflow: hidden;
@@ -512,7 +514,23 @@
             .skill-row { flex-direction: column; gap: 0.35rem; }
             .skill-row-label { text-align: left; min-width: unset; }
             .cert-item { flex-direction: column; gap: 0.15rem; }
+            /* Kill expensive blur on mobile */
+            header { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(13,17,23,0.97); }
+            .project-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(22,27,34,0.95); }
         }
+
+        /* ── Reduced motion ── */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+            .reveal { opacity: 1 !important; transform: none !important; }
+            #bg-canvas { display: none; }
+        }
+
+        /* ── GPU layer hints ── */
+        #bg-canvas { transform: translateZ(0); will-change: transform; }
+        .hero-3d canvas { transform: translateZ(0); }
+        .reveal { will-change: opacity, transform; }
+        .reveal.visible { will-change: auto; }
     </style>
 </head>
 
@@ -584,7 +602,7 @@
         <div class="section-label">// projects</div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=820&q=80" alt="Smart Grid System">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=820&q=80" alt="Smart Grid System">
             <div class="project-body">
                 <div class="project-name">Smart Grid System</div>
                 <div class="tag-row"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Supabase</span><span class="tag">C++ / RTOS</span><span class="tag">ESP32</span><span class="tag">LoRaWAN</span><span class="tag">GPS</span><span class="tag">ChirpStack</span></div>
@@ -594,7 +612,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=820&q=80" alt="Reservit">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=820&q=80" alt="Reservit">
             <div class="project-body">
                 <div class="project-name">Reservit Event Platform</div>
                 <div class="tag-row"><span class="tag">React Native</span><span class="tag">Expo</span><span class="tag">Supabase</span><span class="tag">Airtel Money</span><span class="tag">TypeScript</span></div>
@@ -604,7 +622,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1564694202883-46e7448c1b26?auto=format&fit=crop&w=820&q=80" alt="BusTicKTeT">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1564694202883-46e7448c1b26?auto=format&fit=crop&w=820&q=80" alt="BusTicKTeT">
             <div class="project-body">
                 <div class="project-name">BusTicKTeT</div>
                 <div class="tag-row"><span class="tag">React Native</span><span class="tag">Expo</span><span class="tag">Supabase</span><span class="tag">TypeScript</span></div>
@@ -614,7 +632,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=820&q=80" alt="Document Management System">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=820&q=80" alt="Document Management System">
             <div class="project-body">
                 <div class="project-name">Company Document Management System</div>
                 <div class="tag-row"><span class="tag">CodeIgniter 4</span><span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">Docker</span><span class="tag">PHPUnit</span></div>
@@ -624,7 +642,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=820&q=80" alt="Ticket Sphere">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=820&q=80" alt="Ticket Sphere">
             <div class="project-body">
                 <div class="project-name">Ticket Sphere</div>
                 <div class="tag-row"><span class="tag">React Native</span><span class="tag">Expo</span><span class="tag">Firebase</span><span class="tag">Supabase</span><span class="tag">TypeScript</span></div>
@@ -634,7 +652,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=820&q=80" alt="Predictive Maintenance Node">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=820&q=80" alt="Predictive Maintenance Node">
             <div class="project-body">
                 <div class="project-name">Predictive Maintenance Node</div>
                 <div class="tag-row"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">DHT11</span><span class="tag">LoRa</span><span class="tag">IoT</span></div>
@@ -644,7 +662,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=820&q=80" alt="E220 LoRa Configurator">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=820&q=80" alt="E220 LoRa Configurator">
             <div class="project-body">
                 <div class="project-name">E220 LoRa Configurator</div>
                 <div class="tag-row"><span class="tag">Python</span><span class="tag">Tkinter</span><span class="tag">Serial</span><span class="tag">LoRa</span></div>
@@ -654,7 +672,7 @@
         </div>
 
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=820&q=80" alt="NNFX Trading Robot">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=820&q=80" alt="NNFX Trading Robot">
             <div class="project-body">
                 <div class="project-name">NNFX Trading Robot</div>
                 <div class="tag-row"><span class="tag">MQL5</span><span class="tag">MetaTrader 5</span><span class="tag">NNFX</span><span class="tag">MACD</span></div>
@@ -681,7 +699,7 @@
 
         <div class="section-label" style="margin-top:2rem;">// open source contributions</div>
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=820&q=80" alt="RuView">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=820&q=80" alt="RuView">
             <div class="project-body">
                 <div class="project-name">RuView <span class="redacted-note">— contributor</span></div>
                 <div class="tag-row"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">CSI</span><span class="tag">Python</span><span class="tag">WiFi Sensing</span></div>
@@ -690,7 +708,7 @@
             </div>
         </div>
         <div class="project-card">
-            <img class="project-img" src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=820&q=80" alt="Zuluru3">
+            <img class="project-img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=820&q=80" alt="Zuluru3">
             <div class="project-body">
                 <div class="project-name">Zuluru3 <span class="redacted-note">— contributor</span></div>
                 <div class="tag-row"><span class="tag">PHP</span><span class="tag">CakePHP</span><span class="tag">MySQL</span><span class="tag">Docker</span></div>
@@ -798,81 +816,81 @@
 
 <div id="toast">Message sent!</div>
 
-<script src="head-data.js"></script>
 <script>
-// ── Canvas particle network ────────────────────────────────────────────────
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-const ACCENT = '#64ffda';
-const COUNT = window.innerWidth < 600 ? 45 : 85;
-const MAX_DIST = 130;
-let particles = [];
+// ── Canvas particle network (performance-optimised) ───────────────────────
+(function() {
+    const canvas  = document.getElementById('bg-canvas');
+    const ctx2    = canvas.getContext('2d');
+    const ACCENT  = '#64ffda';
+    const isMob   = window.innerWidth < 600;
+    const cpus    = navigator.hardwareConcurrency || 4;
+    const isLow   = isMob || cpus <= 2;
+    const COUNT   = isLow ? 18 : (isMob ? 30 : 55);
+    const DIST    = isLow ? 0 : 115;   // 0 = no lines on low-end
+    const DIST2   = DIST * DIST;       // avoid sqrt — compare squared distance
+    const FPS_DIV = isLow ? 2 : 1;     // low-end targets 30fps via frame skip
+    let   pts = [], frameN = 0, rafId;
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-class Particle {
-    constructor() { this.reset(); }
-    reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.35;
-        this.vy = (Math.random() - 0.5) * 0.35;
-        this.r = Math.random() * 1.4 + 0.4;
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > canvas.width)  this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    function init() {
+        pts = [];
+        for (let i = 0; i < COUNT; i++) pts.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.32,
+            vy: (Math.random() - 0.5) * 0.32,
+            r:  Math.random() * 1.3 + 0.4,
+        });
     }
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = ACCENT;
-        ctx.globalAlpha = 0.55;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-    }
-}
+    function draw() {
+        rafId = requestAnimationFrame(draw);
+        if (document.hidden) return;           // pause when tab not visible
+        if (++frameN % FPS_DIV !== 0) return;  // throttle on low-end
 
-function initParticles() {
-    particles = [];
-    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-}
+        ctx2.clearRect(0, 0, canvas.width, canvas.height);
 
-function drawLines() {
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const d = Math.sqrt(dx * dx + dy * dy);
-            if (d < MAX_DIST) {
-                ctx.beginPath();
-                ctx.strokeStyle = ACCENT;
-                ctx.globalAlpha = (1 - d / MAX_DIST) * 0.12;
-                ctx.lineWidth = 0.6;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-                ctx.globalAlpha = 1;
+        // Batch all dots in one path — avoids per-dot beginPath overhead
+        ctx2.fillStyle = ACCENT;
+        ctx2.globalAlpha = 0.5;
+        for (let i = 0; i < pts.length; i++) {
+            const p = pts[i];
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            ctx2.beginPath();
+            ctx2.arc(p.x, p.y, p.r, 0, 6.2832);
+            ctx2.fill();
+        }
+        ctx2.globalAlpha = 1;
+
+        // Lines — only on capable devices, squared-distance check (no sqrt)
+        if (DIST > 0) {
+            for (let i = 0; i < pts.length - 1; i++) {
+                for (let j = i + 1; j < pts.length; j++) {
+                    const dx = pts[i].x - pts[j].x;
+                    const dy = pts[i].y - pts[j].y;
+                    const d2 = dx*dx + dy*dy;
+                    if (d2 < DIST2) {
+                        ctx2.beginPath();
+                        ctx2.strokeStyle = ACCENT;
+                        ctx2.globalAlpha = (1 - Math.sqrt(d2) / DIST) * 0.11;
+                        ctx2.lineWidth   = 0.55;
+                        ctx2.moveTo(pts[i].x, pts[i].y);
+                        ctx2.lineTo(pts[j].x, pts[j].y);
+                        ctx2.stroke();
+                        ctx2.globalAlpha = 1;
+                    }
+                }
             }
         }
     }
-}
 
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    drawLines();
-    requestAnimationFrame(animate);
-}
-
-resize();
-initParticles();
-animate();
+    resize(); init(); draw();
+    window.addEventListener('resize', () => { resize(); init(); }, { passive: true });
+})();
 window.addEventListener('resize', () => { resize(); initParticles(); });
 
 // ── Typewriter ─────────────────────────────────────────────────────────────
@@ -966,6 +984,16 @@ document.querySelectorAll('.copy-email').forEach(link => {
     hud.insertBefore(statusEl, hud.firstChild);
     wrap.appendChild(hud);
 
+    // ── Device capability tier ────────────────────────────────────────────────
+    var IS_MOB  = window.innerWidth < 600;
+    var IS_LOW  = IS_MOB || (navigator.hardwareConcurrency || 4) <= 2;
+    var J_FPS   = IS_LOW ? 2 : 1;        // frame divisor: 1=60fps, 2=30fps
+    var J_STEPS = IS_LOW ? 18 : 50;      // aurora wave resolution
+    var J_PARTS = IS_LOW ? 14 : 55;      // particle count
+    var J_BANDS = IS_LOW ? 2  : 5;       // aurora band count
+    var J_RINGS = !IS_LOW;               // orbit rings: desktop only
+    var jFrame  = 0;
+
     // ── Intro constants ───────────────────────────────────────────────────────
     var INTRO_DUR = 4.2;
     var introShown = false;
@@ -980,18 +1008,18 @@ document.querySelectorAll('.copy-email').forEach(link => {
         ['> JARVIS v4.1 // ONLINE',   0.57, 0.74],
     ];
 
-    // ── Aurora band definitions ───────────────────────────────────────────────
+    // ── Aurora band definitions (sliced by device tier) ───────────────────────
     var BANDS = [
         {rgb:[100,255,218], spd:0.38, amp:0.40, frq:0.75, ph:0.0},
         {rgb:[ 56,189,248], spd:0.27, amp:0.50, frq:0.60, ph:1.3},
         {rgb:[167,139,250], spd:0.52, amp:0.28, frq:1.05, ph:2.5},
         {rgb:[  0,210,200], spd:0.42, amp:0.44, frq:0.85, ph:0.9},
         {rgb:[ 99,102,241], spd:0.33, amp:0.36, frq:0.65, ph:1.9},
-    ];
+    ].slice(0, J_BANDS);
 
-    // ── Orbital particles ─────────────────────────────────────────────────────
+    // ── Orbital particles (count by device tier) ──────────────────────────────
     var PARTS = [];
-    for (var pi=0; pi<55; pi++) {
+    for (var pi=0; pi<J_PARTS; pi++) {
         PARTS.push({
             theta: Math.random()*Math.PI*2,
             phi:   Math.acos(2*Math.random()-1),
@@ -1032,6 +1060,8 @@ document.querySelectorAll('.copy-email').forEach(link => {
 
     (function loop(now) {
         requestAnimationFrame(loop);
+        if (document.hidden) return;                   // pause when tab not visible
+        if (++jFrame % J_FPS !== 0) return;            // throttle to 30fps on low-end
         var dt = Math.min((now - prev) * 0.001, 0.05);
         prev = now; elapsed += dt;
         energy = Math.max(0, energy - dt * 1.8);
@@ -1092,8 +1122,8 @@ document.querySelectorAll('.copy-email').forEach(link => {
                 var r=b.rgb[0], g=b.rgb[1], bl=b.rgb[2];
                 ctx.beginPath();
                 ctx.moveTo(cx-R, cy+yOff);
-                for (var j=0; j<=50; j++) {
-                    var xn = j/50*2-1;
+                for (var j=0; j<=J_STEPS; j++) {
+                    var xn = j/J_STEPS*2-1;
                     var y  = cy + yOff
                            + Math.sin(xn*Math.PI*b.frq   + ph       ) * R*b.amp*0.38
                            + Math.sin(xn*Math.PI*b.frq*1.8+ ph*1.4  ) * R*b.amp*0.18
@@ -1134,8 +1164,8 @@ document.querySelectorAll('.copy-email').forEach(link => {
             ctx.lineWidth   = 1.2;
             ctx.beginPath(); ctx.arc(cx,cy,R*pulse,0,Math.PI*2); ctx.stroke();
 
-            // orbit rings
-            [[R*1.38,elapsed*0.38+0.0,0.26],[R*1.62,-elapsed*0.27+1.1,-0.52],[R*1.88,elapsed*0.48+2.3,0.68]]
+            // orbit rings (desktop only)
+            if (J_RINGS) [[R*1.38,elapsed*0.38+0.0,0.26],[R*1.62,-elapsed*0.27+1.1,-0.52],[R*1.88,elapsed*0.48+2.3,0.68]]
             .forEach(function(def,i){
                 var rx=def[0],angle=def[1],tilt=def[2];
                 var ry  = rx * Math.abs(Math.sin(tilt + elapsed*0.04+i));
