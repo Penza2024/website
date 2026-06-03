@@ -503,9 +503,6 @@
         /* 3D card — smooth reset */
         .project-card { transform-style: preserve-3d; will-change: transform; }
 
-        /* magnetic btn transition */
-        .btn { will-change: transform; }
-
         /* ── Mobile ── */
         @media (max-width: 560px) {
             .hero-inner { flex-direction: column-reverse; gap: 1.25rem; }
@@ -514,7 +511,6 @@
             .skill-row { flex-direction: column; gap: 0.35rem; }
             .skill-row-label { text-align: left; min-width: unset; }
             .cert-item { flex-direction: column; gap: 0.15rem; }
-            /* Kill expensive blur on mobile */
             header { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(13,17,23,0.97); }
             .project-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(22,27,34,0.95); }
         }
@@ -526,11 +522,17 @@
             #bg-canvas { display: none; }
         }
 
-        /* ── GPU layer hints ── */
-        #bg-canvas { transform: translateZ(0); will-change: transform; }
+        /* ── GPU layer: canvas only — NOT reveal/btn (will-change on hundreds of
+           elements eats GPU memory on low-RAM devices and causes OOM crashes)  ── */
+        #bg-canvas { transform: translateZ(0); }
         .hero-3d canvas { transform: translateZ(0); }
-        .reveal { will-change: opacity, transform; }
-        .reveal.visible { will-change: auto; }
+
+        /* ── content-visibility: skip rendering off-screen sections entirely ── */
+        #writing   { content-visibility: auto; contain-intrinsic-size: 0 220px;  }
+        #projects  { content-visibility: auto; contain-intrinsic-size: 0 2200px; }
+        #skills    { content-visibility: auto; contain-intrinsic-size: 0 320px;  }
+        #certificates { content-visibility: auto; contain-intrinsic-size: 0 200px; }
+        #contact   { content-visibility: auto; contain-intrinsic-size: 0 420px;  }
     </style>
 </head>
 
@@ -820,12 +822,19 @@
 // ── Canvas particle network (performance-optimised) ───────────────────────
 (function() {
     const canvas  = document.getElementById('bg-canvas');
+    // Device capability tiers using deviceMemory API (GB) + core count
+    const memGB   = navigator.deviceMemory || 4;
+    const cpus    = navigator.hardwareConcurrency || 4;
+    const isMob   = window.innerWidth < 600;
+    const isVLow  = memGB <= 0.5;                      // 500MB RAM → skip canvas
+    const isLow   = isVLow || memGB <= 1 || cpus <= 2 || isMob;
+
+    // 500MB devices: don't run canvas at all — saves ~15MB GPU memory
+    if (isVLow) { canvas.style.display = 'none'; return; }
+
     const ctx2    = canvas.getContext('2d');
     const ACCENT  = '#64ffda';
-    const isMob   = window.innerWidth < 600;
-    const cpus    = navigator.hardwareConcurrency || 4;
-    const isLow   = isMob || cpus <= 2;
-    const COUNT   = isLow ? 18 : (isMob ? 30 : 55);
+    const COUNT   = isLow ? 18 : 55;
     const DIST    = isLow ? 0 : 115;   // 0 = no lines on low-end
     const DIST2   = DIST * DIST;       // avoid sqrt — compare squared distance
     const FPS_DIV = isLow ? 2 : 1;     // low-end targets 30fps via frame skip
@@ -984,14 +993,18 @@ document.querySelectorAll('.copy-email').forEach(link => {
     hud.insertBefore(statusEl, hud.firstChild);
     wrap.appendChild(hud);
 
-    // ── Device capability tier ────────────────────────────────────────────────
+    // ── Device capability tiers (deviceMemory = RAM in GB) ───────────────────
+    var memGB   = navigator.deviceMemory || 4;
+    var cpus2   = navigator.hardwareConcurrency || 4;
     var IS_MOB  = window.innerWidth < 600;
-    var IS_LOW  = IS_MOB || (navigator.hardwareConcurrency || 4) <= 2;
-    var J_FPS   = IS_LOW ? 2 : 1;        // frame divisor: 1=60fps, 2=30fps
-    var J_STEPS = IS_LOW ? 18 : 50;      // aurora wave resolution
-    var J_PARTS = IS_LOW ? 14 : 55;      // particle count
-    var J_BANDS = IS_LOW ? 2  : 5;       // aurora band count
-    var J_RINGS = !IS_LOW;               // orbit rings: desktop only
+    var IS_VLOW = memGB <= 0.5;                              // ≤500MB RAM
+    var IS_LOW  = IS_VLOW || memGB <= 1 || cpus2 <= 2 || IS_MOB;
+    // fps divisor: very-low=20fps (÷3), low=30fps (÷2), desktop=60fps (÷1)
+    var J_FPS   = IS_VLOW ? 3 : (IS_LOW ? 2 : 1);
+    var J_STEPS = IS_VLOW ? 10 : (IS_LOW ? 18 : 50);   // aurora wave resolution
+    var J_PARTS = IS_VLOW ? 6  : (IS_LOW ? 14 : 55);   // particle count
+    var J_BANDS = IS_VLOW ? 1  : (IS_LOW ? 2  : 5);    // aurora band layers
+    var J_RINGS = !IS_LOW;                              // orbit rings: desktop only
     var jFrame  = 0;
 
     // ── Intro constants ───────────────────────────────────────────────────────
@@ -1284,6 +1297,11 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
 </script>
 
 <script>
+// ── Quirky animations: skip entirely on very-low-end devices ─────────────────
+(function() {
+  const memGB = navigator.deviceMemory || 4;
+  if (memGB <= 0.5) return; // 500MB — don't allocate animation observers
+
 // ── Text scramble on section labels ──────────────────────────────────────────
 (function() {
   const CHARS = '!@#$%^&*<>[]{}|/\\~`abcdef0123456789';
@@ -1401,6 +1419,8 @@ const certObs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.2 });
 document.querySelectorAll('#certificates').forEach(s => certObs.observe(s));
+
+})(); // end low-end guard
 </script>
 </body>
 </html>
